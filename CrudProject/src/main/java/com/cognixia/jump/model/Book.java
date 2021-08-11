@@ -35,7 +35,7 @@ public class Book {
 		this.rented = rented;
 	}
 
-	public int getIsbn() {
+	public String getIsbn() {
 		return isbn;
 	}
 
@@ -61,7 +61,7 @@ public class Book {
 
 	@Override
 	public String toString() {
-		return "Book [id=" + id + ", title=" + title  + ", description=" + description + ", available=" + rented + "]";
+		return "Book [isbn=" + isbn + ", title=" + title  + ", description=" + description + ", available=" + rented + "]";
 	}
 
 }

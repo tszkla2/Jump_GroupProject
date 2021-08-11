@@ -1,13 +1,21 @@
 package main.java.com.cognixia.jump.controller;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.cognixia.jump.connection.ConnectionManager;
-
-import main.java.com.cognixia.jump.dao.BookDaoImp;
+import com.cognixia.jump.dao.BookDaoImp;
+import com.cognixia.jump.model.Book;
+import com.cognixia.jump.utility.Utility;
 
 @WebServlet("/")
 public class BookServlet extends HttpServlet {
@@ -96,14 +104,18 @@ public class BookServlet extends HttpServlet {
     private void goToEditBookForm(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
 
-        // get the id of the product we need edit/update
+        // get id of product we need to edit/update
         String isbn = request.getParameter("isbn");
-
-        // get the full row info for the product
-        Book book = bookDao.getBookById(isbn);
-
-        // send product to edit to new page
-        request.setAttribute("book", book);
+        
+        System.out.println(isbn);
+		
+		// get full row info for the product
+        Book book = bookDao.getBookByIsbn(isbn);
+        
+        System.out.println(book.toString());
+		
+		// send product info to the form page so it can be updated
+		request.setAttribute("book", book);
 
         // forward info and redirect to that page
 
@@ -122,10 +134,10 @@ public class BookServlet extends HttpServlet {
         String description = request.getParameter("description").trim();
 
         // create the product object
-        Book book = new Book(isbn, title, rented, description);
+        Book book = new Book(isbn, title, description, rented, new Date());
 
         // pass object to update from the dao
-        bookDao.updateProduct(book);
+        bookDao.updateBook(book);
 
         // redirect to our list products page once we finish updating info on product
         response.sendRedirect("list");
@@ -147,8 +159,8 @@ public class BookServlet extends HttpServlet {
         boolean rented = Boolean.parseBoolean(request.getParameter("rented").trim());
         String description = request.getParameter("description").trim();
 		
-		// create object for product
-		Book book = new Book(0, title, rented, description, new Date());
+        // create object for product
+		Book book = new Book(Utility.randomIsbn(), title, description, rented, new Date());
 		
 		// call dao to add product to our database
 		bookDao.addBook(book);
@@ -157,5 +169,5 @@ public class BookServlet extends HttpServlet {
 		response.sendRedirect("list");
 		
 	}
-    
+
 }

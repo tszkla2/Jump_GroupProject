@@ -4,10 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.cognixia.jump.connection.ConnectionManager;
-import com.cognixia.jump.dao.BookDao;
 import com.cognixia.jump.model.Book;
 
 public class BookDaoImp implements BookDao {
@@ -16,9 +17,9 @@ public class BookDaoImp implements BookDao {
 
     private static String SELECT_ALL_BOOKS = "select * from book";
     private static String SELECT_BOOK_BY_ISBN = "select * from book where isbn = ?";
-    private static String INSERT_BOOK = "insert into book(title, rented, add_to_library, description ) values(?, ?, ?, ?)";
+    private static String INSERT_BOOK = "insert into book(isbn,title, descr, rented, added_to_library ) values(?, ?, ?, ?, ?)";
     private static String DELETE_BOOK = "delete from book where isbn = ?";
-    private static String UPDATE_BOOK = "update book set title = ?, rented = ?, description = ? where isbn = ?";
+    private static String UPDATE_BOOK = "update book set title = ?, rented = ?, descr = ? where isbn = ?";
     private static String UPDATE_BOOK_AVAILABILITY = "update book set rented = ? where isbn = ?";
 
     @Override
@@ -33,7 +34,7 @@ public class BookDaoImp implements BookDao {
                 String title = rs.getString("title");
                 boolean rented = rs.getBoolean("rented");
                 Date added_to_library = rs.getDate("added_to_library");
-                String description = rs.getString("description");
+                String description = rs.getString("descr");
 
                 allBooks.add(new Book(isbn, title, description, rented, added_to_library));
             }
@@ -44,14 +45,14 @@ public class BookDaoImp implements BookDao {
 
         return allBooks;
     }
-    
+    @Override
     public Book getBookByIsbn(String isbn) {
 
         Book book = null;
 
         try (PreparedStatement pstmt = conn.prepareStatement(SELECT_BOOK_BY_ISBN)) {
-
-            pstmt.setInt(1, isbn);
+            System.out.println("in get by isbn");
+            pstmt.setString(1, isbn);
 
             ResultSet rs = pstmt.executeQuery();
 
@@ -59,15 +60,17 @@ public class BookDaoImp implements BookDao {
                 String title = rs.getString("title");
                 boolean rented = rs.getBoolean("rented");
                 Date added_to_library = rs.getDate("added_to_library");
-                String description = rs.getString("description");
+                String description = rs.getString("descr");
 
                 book = new Book(isbn, title, description, rented, added_to_library);
+            } else {
+                System.out.println("rs next failed");
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        System.out.println("in get by isbn end " + book.toString());
         return book;
     }
     
@@ -76,10 +79,15 @@ public class BookDaoImp implements BookDao {
 
         try (PreparedStatement pstmt = conn.prepareStatement(INSERT_BOOK)) {
 
-            pstmt.setString(1, book.getTitle());
-            pstmt.setInt(2, book.isRented());
-            pstmt.setDate(3, book.getAdded_to_library());
-            pstmt.setString(4, book.getDescription());
+            pstmt.setString(1, book.getIsbn());
+            pstmt.setString(2, book.getTitle());
+            pstmt.setBoolean(4, book.isRented());
+            pstmt.setString(3, book.getDescription());
+            java.sql.Date sqlPackageDate = new java.sql.Date(book.getAdded_to_library().getTime());
+            System.out.println(sqlPackageDate);
+            pstmt.setDate(5, sqlPackageDate);
+            System.out.println(book);
+
 
             // at least one row added
             if (pstmt.executeUpdate() > 0) {
@@ -98,7 +106,7 @@ public class BookDaoImp implements BookDao {
 
         try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BOOK)) {
 
-            pstmt.setInt(1, isbn);
+            pstmt.setString(1, isbn);
 
             // at least one row deleted
             if (pstmt.executeUpdate() > 0) {
@@ -118,9 +126,11 @@ public class BookDaoImp implements BookDao {
         try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_BOOK)) {
 
             pstmt.setString(1, book.getTitle());
-            pstmt.setInt(2, book.isRented());
+            pstmt.setBoolean(2, book.isRented());
             pstmt.setString(3, book.getDescription());
-            pstmt.setInt(4, book.getId());
+            pstmt.setString(4, book.getIsbn());
+
+            System.out.println("book");
 
             // at least one row updated
             if (pstmt.executeUpdate() > 0) {
@@ -140,7 +150,7 @@ public class BookDaoImp implements BookDao {
         try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_BOOK_AVAILABILITY)) {
 
             pstmt.setBoolean(1, book.isRented());
-			pstmt.setInt(2, book.getId());
+			pstmt.setString(2, book.getIsbn());
 
 			// at least one row updated
 			if (pstmt.executeUpdate() > 0) {
@@ -153,4 +163,5 @@ public class BookDaoImp implements BookDao {
 		
 		return false;
 	}
+
 }

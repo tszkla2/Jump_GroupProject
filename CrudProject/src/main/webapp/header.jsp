@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Product Catalog</title>
+<title>Book Catalog</title>
 
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
@@ -18,7 +18,7 @@
 	
 	<div class="container">
 
-		<h1 class="display-4">Products Website</h1>
+		<h1 class="display-4">Books Website</h1>
 	
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<div class="container-fluid">

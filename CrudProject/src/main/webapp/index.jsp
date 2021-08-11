@@ -3,7 +3,7 @@
 
 <div class="container">
 	
-	<h1>Welcome to the Product Catalog Site!!</h1>
+	<h1>Welcome to the Book Catalog Site!!</h1>
 	
 </div>
 
