@@ -7,51 +7,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import com.cognixia.jump.connection.ConnectionManager;
-import com.cognixia.jump.model.Librarian;
 import com.cognixia.jump.model.Book;
 
+public class BookDaoImp implements BookDao {
+    
+    public static final Connection conn = ConnectionManager.getConnection();
 
-public class LibrarianDaoImp implements LibrarianDao, BookDao {
-	
-	public static final Connection conn = ConnectionManager.getConnection();
-	
-	private static String SELECT_ALL_LIBRARIANS = "select * from librarian";
-	private static String SELECT_ALL_BOOKS = "select * from book";
-	private static String SELECT_BOOK_BY_ISBN = "select * from book where isbn = ?";
-	private static String INSERT_BOOK = "insert into book(isbn,title, descr, rented, added_to_library ) values(?, ?, ?, ?, ?)";
-	private static String DELETE_BOOK = "delete from book where isbn = ?";
-	private static String UPDATE_BOOK = "update book set title = ?, rented = ?, descr = ? where isbn = ?";
-	private static String UPDATE_BOOK_AVAILABILITY = "update book set rented = ? where isbn = ?";
-	private static String UPDATE_USERNAME = "update librarian set username = ?";
-	private static String UPDATE_PASSWORD = "update librarian set password = ?";
-	
-	@Override
-	public List<Librarian> getAllLibrarians() {
-		
-		List<Librarian> allLibrarians = new ArrayList<Librarian>();
-		
-		try(PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_LIBRARIANS);
-				ResultSet rs = pstmt.executeQuery() ) {
-			
-			while(rs.next()) {
-				
-				int librarian_id = rs.getInt("librarian_id");
-				String username = rs.getString("username");
-				String password = rs.getString("password");
-				
-				allLibrarians.add(new Librarian(librarian_id, username, password));
-				
-			}
-			
-		} catch(SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return allLibrarians;
-	}
-	
-	@Override
+    private static String SELECT_ALL_BOOKS = "select * from book";
+    private static String SELECT_BOOK_BY_ISBN = "select * from book where isbn = ?";
+    private static String INSERT_BOOK = "insert into book(isbn,title, descr, rented, added_to_library ) values(?, ?, ?, ?, ?)";
+    private static String DELETE_BOOK = "delete from book where isbn = ?";
+    private static String UPDATE_BOOK = "update book set title = ?, rented = ?, descr = ? where isbn = ?";
+    private static String UPDATE_BOOK_AVAILABILITY = "update book set rented = ? where isbn = ?";
+
+    @Override
     public List<Book> getAllBooks() {
 
         List<Book> allBooks = new ArrayList<Book>();
@@ -74,9 +45,7 @@ public class LibrarianDaoImp implements LibrarianDao, BookDao {
 
         return allBooks;
     }
-	
-	
-	@Override
+    @Override
     public Book getBookByIsbn(String isbn) {
 
         Book book = null;
@@ -195,45 +164,4 @@ public class LibrarianDaoImp implements LibrarianDao, BookDao {
 		return false;
 	}
 
-	
-	
-
-	@Override
-	public boolean updateUsername(Librarian librarian) {
-		
-		try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_USERNAME)) {
-
-			pstmt.setString(2, librarian.getUsername());
-
-			// at least one row updated
-			if (pstmt.executeUpdate() > 0) {
-				return true;
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return false;
-	}
-	
-	@Override
-	public boolean updatePassword(Librarian librarian) {
-		
-		try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_PASSWORD)) {
-
-			pstmt.setString(3, librarian.getPassword());
-
-			// at least one row updated
-			if (pstmt.executeUpdate() > 0) {
-				return true;
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return false;
-	}
-	
 }
