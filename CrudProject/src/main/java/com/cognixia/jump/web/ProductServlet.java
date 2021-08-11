@@ -76,6 +76,34 @@ public class ProductServlet extends HttpServlet {
 			addNewProduct(request, response);
 			break;
 			
+		case "/login":
+			goToLoginPage(request, response);
+
+			
+			break;
+			
+			
+		case "/about":
+			goToAboutPage(request, response);
+
+			
+			break;
+//		case "/patron":
+//			goToPatronView(request, response);
+//
+//			
+//			break;	
+//		case "/librarian":
+//			goToLibrarianView(request, response);
+
+			
+//			break;	
+		case "/trylogin":
+			handleLogin(request, response);
+
+			
+			break;
+			
 		default:
 			// redirect the the url: localhost:8080/CrudProject
 			// display index.js page
@@ -84,42 +112,105 @@ public class ProductServlet extends HttpServlet {
 		}
 	}
 	
-	private void listProducts(HttpServletRequest request, HttpServletResponse response) 
+	private void handleLogin(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		
-		List<Product> allProducts = productDao.getAllProducts();
 		
-		// add in data you're going to send, through the request object
-		request.setAttribute("allProducts", allProducts);
-		
-		// redirect to jsp page and send data we just pulled
-		RequestDispatcher dispatcher = request.getRequestDispatcher("product-list.jsp");
-		dispatcher.forward(request, response);
-		
-	}
-	
-	private void deleteProduct(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException {
-		
-		// get the id for the product to delete
-		int id = Integer.parseInt(request.getParameter("id"));
-		
-		// use dao to perform delete
-		productDao.deleteProduct(id);
-		
-		// redirect back to products page (refresh)
-		// table will reload and not contain product we just deleted
-		response.sendRedirect("list"); // send another request to servlet to load /list
-	}
+		String temp = request.getParameter("choice");
+		String userType = new String();
+		if(temp.equals("0")) {
+			userType = "patron";
+		}
+		else {
+			userType = "librarian";
 
-	private void goToNewProductForm(HttpServletRequest request, HttpServletResponse response) 
+		}
+		
+		String buildString = userType.concat(".jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher(buildString);
+		
+		dispatcher.forward(request, response);
+		
+		
+	}
+	
+	private void goToLibrarianView(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("product-form.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("librarian.jsp");
+		
+		dispatcher.forward(request, response);
+		
+		
+	}
+	
+	
+	private void goToPatronView(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("patron.jsp");
+		
+		dispatcher.forward(request, response);
+		
+		
+	}
+	
+	
+	private void goToLoginPage(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
 		
 		dispatcher.forward(request, response);
 	}
 	
+	
+
+	private void goToAboutPage(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("about.jsp");
+		
+		dispatcher.forward(request, response);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+//	********************************************************************************************************************************
+//	********************************	REFERENCE MATERIAL ********************************************************
+//	****************************************************************************************************************
 	private void addNewProduct(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		
@@ -173,7 +264,43 @@ public class ProductServlet extends HttpServlet {
 		response.sendRedirect("list");
 		
 	}
+
 	
+	private void listProducts(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		
+		List<Product> allProducts = productDao.getAllProducts();
+		
+		// add in data you're going to send, through the request object
+		request.setAttribute("allProducts", allProducts);
+		
+		// redirect to jsp page and send data we just pulled
+		RequestDispatcher dispatcher = request.getRequestDispatcher("product-list.jsp");
+		dispatcher.forward(request, response);
+		
+	}
+	
+	private void deleteProduct(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		
+		// get the id for the product to delete
+		int id = Integer.parseInt(request.getParameter("id"));
+		
+		// use dao to perform delete
+		productDao.deleteProduct(id);
+		
+		// redirect back to products page (refresh)
+		// table will reload and not contain product we just deleted
+		response.sendRedirect("list"); // send another request to servlet to load /list
+	}
+
+	private void goToNewProductForm(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("product-form.jsp");
+		
+		dispatcher.forward(request, response);
+	}
 	
 
 }
