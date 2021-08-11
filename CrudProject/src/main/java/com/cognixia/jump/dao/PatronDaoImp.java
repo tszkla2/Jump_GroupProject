@@ -1,6 +1,5 @@
 package com.cognixia.jump.dao;
 
-import java.awt.print.Book;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -83,7 +82,7 @@ public class PatronDaoImp implements PatronDao{
 	}
 	
 	@Override
-	public List<Book> getPatronBooks(int id) {
+	public List<com.cognixia.jump.model.Book> getPatronBooks(int id) {
 		
 		List<Book> allPatronBooks = new ArrayList<Book>();
 		
