@@ -48,9 +48,9 @@ public class BookServlet extends HttpServlet {
         String action = request.getServletPath();
 
         switch (action) {
-            case "/list":
-                listBooks(request, response);
-                break;
+            // case "/list":
+            //     listBooks(request, response);
+            //     break;
             case "/delete":
                 deleteBook(request, response);
                 break;
@@ -66,7 +66,34 @@ public class BookServlet extends HttpServlet {
             case "/add":
                 addNewBook(request, response);
                 break;
+            
+            case "/login":
+                goToLoginPage(request, response);
+                break;
 
+            case "/about":
+                goToAboutPage(request, response);
+                break;
+
+    		case "/patron":
+    			goToPatronView(request, response);
+    			break;	
+
+    		case "/librarian":
+    			goToLibrarianView(request, response);	
+                break;
+
+            case "/trylogin":
+                handleLogin(request, response);
+                break;
+
+            case "/listLibrarian":
+                listBooks(request, response,"librarian");
+                break;
+            
+            case "/listPatron":
+                listBooks(request, response, "patron");
+                break;
             default:
 
                 response.sendRedirect("/");
@@ -75,12 +102,13 @@ public class BookServlet extends HttpServlet {
 
     }
     
-    private void listBooks(HttpServletRequest request, HttpServletResponse response) 
+    private void listBooks(HttpServletRequest request, HttpServletResponse response, String user) 
             throws ServletException, IOException {
 
         List<Book> allBooks = bookDao.getAllBooks();
 
         request.setAttribute("allBooks", allBooks);
+        request.setAttribute("user", user);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("book-list.jsp");
 
@@ -168,6 +196,63 @@ public class BookServlet extends HttpServlet {
 		// once added, redirect to the product list page
 		response.sendRedirect("list");
 		
+	}
+
+    private void handleLogin(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		
+		String temp = request.getParameter("choice");
+		String userType = new String();
+		if(temp.equals("0")) {
+			userType = "patron";
+		}
+		else {
+			userType = "librarian";
+
+		}
+		
+		String buildString = userType.concat(".jsp");
+
+        System.out.println(buildString);
+		RequestDispatcher dispatcher = request.getRequestDispatcher(buildString);
+		
+		dispatcher.forward(request, response);
+	}
+	
+	private void goToLibrarianView(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("librarian.jsp");
+		
+		dispatcher.forward(request, response);
+	}
+	
+	
+	private void goToPatronView(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("patron.jsp");
+		
+		dispatcher.forward(request, response);
+	}
+	
+	
+	private void goToLoginPage(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+		
+		dispatcher.forward(request, response);
+	}
+	
+	
+
+	private void goToAboutPage(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("about.jsp");
+		
+		dispatcher.forward(request, response);
 	}
 
 }

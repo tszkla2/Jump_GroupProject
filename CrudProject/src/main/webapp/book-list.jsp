@@ -38,7 +38,8 @@
 					<td>
 						<c:out value="${ book.rented }" />
 					</td>
-					
+					<c:out value="${user} in book list jsp" />
+					<c:if test="${user == 'librarian'}" >
 					<td>
 						
 						<a href="edit?isbn=<c:out value='${ book.isbn }' />">
@@ -52,7 +53,15 @@
 						</a>
 						
 					</td>
-					
+					</c:if>
+
+					<c:if test="${user == 'patron'}" >
+					<td>
+						<a href="edit?isbn=<c:out value='${ book.isbn }' />">
+							<button class="btn btn-primary">Rent</button>
+						</a>
+					</td>
+					</c:if>
 				</tr>
 			
 			</c:forEach>
