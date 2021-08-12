@@ -217,6 +217,12 @@ public class LibraryServlet extends HttpServlet {
 			throws ServletException, IOException {
 		
 		List<Book> patronBooks = patronDao.getPatronBooks(loggedInPatron.getId());
+		//List<>
+		
+		for(Book book : patronBooks) {
+			List<String> book_dates = patronDao.getBookDates(loggedInPatron.getId(), book.getIsbn());
+			
+		}
 		
 		request.setAttribute("patronBooks", patronBooks);
 		request.setAttribute("patron", loggedInPatron);
