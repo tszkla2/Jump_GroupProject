@@ -11,6 +11,7 @@ public class Patron {
 	private String password;
 	private boolean account_frozen;
 
+
 	// Constructor if id is not available
 	public Patron( String first_name, String last_name, String username, String password) {
 		super();

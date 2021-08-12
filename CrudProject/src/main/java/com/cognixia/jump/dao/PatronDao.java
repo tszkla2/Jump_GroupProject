@@ -15,11 +15,13 @@ public interface PatronDao {
 	
 	public Patron getPatron(String username, String password);
 	
+	public Patron getPatronById(int id);
+	
 	public int getPatronId(String username);
 	
-	public boolean checkoutBook(Patron patron, Book book);
+	public boolean checkoutBook(int patron_id, String isbn);
 	
-	public boolean returnBook(Patron patron, Book book);
+	public boolean returnBook(int id, String isbn);
 	
 	public boolean updatePatron(Patron patron);
 

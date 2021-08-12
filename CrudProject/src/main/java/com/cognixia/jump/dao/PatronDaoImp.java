@@ -24,6 +24,7 @@ public class PatronDaoImp implements PatronDao{
 													+ "INNER JOIN book_checkout ON book.isbn=book_checkout.isbn WHERE book_checkout.patron_id = ? ";
 	private static String ADD_PATRON = "INSERT INTO patron (first_name, last_name, username, password) VALUES (?, ?, ?, ?)";
 	private static String GET_PATRON = "SELECT * FROM patron WHERE username = ? AND password = ?";
+	private static String GET_PATRON_BY_ID = "SELECT * FROM patron WHERE patron_id = ?";
 	private static String CHECKOUT = "INSERT INTO book_checkout (patron_id, isbn, checkedout, due_date) VALUES (?, ?, ?, ?)";
 	private static String RETURN = "UPDATE book_checkout SET returned = ? WHERE patron_id = ? AND isbn = ?";
 	private static String DUE_DATE = "SELECT due_date FROM book_checkout WHERE patron_id = ? AND isbn = ?";
@@ -142,7 +143,9 @@ public class PatronDaoImp implements PatronDao{
 			pstmt.setString(2, passWord);
 			
 			ResultSet rs = pstmt.executeQuery();
-			
+			if(!rs.isBeforeFirst()) {
+				return patron;
+			}
 			if(rs.next()) {
 				int patron_id = rs.getInt("patron_id");
 				String first_name = rs.getString("first_name");
@@ -152,6 +155,7 @@ public class PatronDaoImp implements PatronDao{
 				boolean account_frozen = rs.getBoolean("account_frozen");
 				
 				patron = new Patron(patron_id, first_name, last_name, username, password, account_frozen);
+				return patron;
 			}
 		}catch (SQLException e) {
 			e.printStackTrace();
@@ -162,15 +166,46 @@ public class PatronDaoImp implements PatronDao{
 	}
 	
 	@Override
-	public boolean checkoutBook(Patron patron, Book book) {
+	public Patron getPatronById(int id) {
+		
+		Patron patron = null;
+		
+		try(PreparedStatement pstmt = conn.prepareStatement(GET_PATRON)) {
+			
+			pstmt.setInt(1, id);
+			
+			ResultSet rs = pstmt.executeQuery();
+			if(!rs.isBeforeFirst()) {
+				return patron;
+			}
+			if(rs.next()) {
+				String first_name = rs.getString("first_name");
+				String last_name = rs.getString("last_name");
+				String username = rs.getString("username");
+				String password = rs.getString("password");
+				boolean account_frozen = rs.getBoolean("account_frozen");
+				
+				patron = new Patron(id, first_name, last_name, username, password, account_frozen);
+				return patron;
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return patron;
+		
+	}
+	
+	@Override
+	public boolean checkoutBook(int id, String isbn) {
 		
 		long WEEK = 7 * 24 * 60 * 60 * 1000;
 		
 		try(PreparedStatement pstmt = conn.prepareStatement(CHECKOUT)){
 			
 			
-			pstmt.setInt(1,patron.getId());
-			pstmt.setString(2,book.getIsbn());
+			pstmt.setInt(1, id);
+			pstmt.setString(2, isbn);
 			pstmt.setDate(3, new java.sql.Date(System.currentTimeMillis()));
 			pstmt.setDate(4, new java.sql.Date(System.currentTimeMillis() + WEEK));
 			if(pstmt.executeUpdate() > 0) {
@@ -186,7 +221,7 @@ public class PatronDaoImp implements PatronDao{
 	}
 	
 	@Override
-	public boolean returnBook(Patron patron, Book book) {
+	public boolean returnBook(int id, String isbn) {
 		
 		 
 		
@@ -197,11 +232,11 @@ public class PatronDaoImp implements PatronDao{
 			java.sql.Date returnDate = new java.sql.Date(System.currentTimeMillis());
 			
 			pstmt.setDate(1, returnDate);
-			pstmt.setInt(2, patron.getId());
-			pstmt.setString(3, book.getIsbn());
+			pstmt.setInt(2, id);
+			pstmt.setString(3, isbn);
 			
-			duePstmt.setInt(1, patron.getId());
-			duePstmt.setString(2, book.getIsbn());
+			duePstmt.setInt(1, id);
+			duePstmt.setString(2, isbn);
 			
 			// retrieves the due date
 			ResultSet rs = duePstmt.executeQuery();

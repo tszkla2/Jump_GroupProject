@@ -10,8 +10,18 @@
   	<description></description>
   	<servlet-class>com.cognixia.jump.web.ProductServlet</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>LibraryServlet</servlet-name>
+  	<display-name>LibraryServlet</display-name>
+  	<description></description>
+  	<servlet-class>com.cognixia.jump.web.LibraryServlet</servlet-class>
+  </servlet> 
   <servlet-mapping>
   	<servlet-name>ProductServlet</servlet-name>
   	<url-pattern>/ProductServlet</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>LibraryServlet</servlet-name>
+  	<url-pattern>/LibraryServlet</url-pattern>
+  </servlet-mapping> 
 </web-app>
