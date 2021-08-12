@@ -1,5 +1,5 @@
 
-<%@ include file="header.jsp" %>
+<%@ include file="patron_header.jsp" %>
 
 <div class="container">
 	
@@ -38,30 +38,11 @@
 					<td>
 						<c:out value="${ book.rented }" />
 					</td>
-					<c:out value="${user} in book list jsp" />
-					<c:if test="${user == 'librarian'}" >
-					<td>
-						
-						<a href="edit?isbn=<c:out value='${ book.isbn }' />">
-							<button class="btn btn-primary">Edit</button>
-						</a>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<a href="delete?isbn=<c:out value='${ book.isbn }' />">
-						
-							<button class="btn btn-danger">Delete</button>
-							
-						</a>
-						
-					</td>
-					</c:if>
-
-					<c:if test="${user == 'patron'}" >
 					<td>
 						<a href="edit?isbn=<c:out value='${ book.isbn }' />">
 							<button class="btn btn-primary">Rent</button>
 						</a>
 					</td>
-					</c:if>
 				</tr>
 			
 			</c:forEach>

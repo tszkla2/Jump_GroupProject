@@ -42,7 +42,7 @@
 					
 						<a class="nav-link" 
 							   aria-current="page" 
-							   href="<%= request.getContextPath() %>/viewCatalogue">View Catalogue</a> 
+							   href="<%= request.getContextPath() %>/listPatron">View Catalogue</a> 
 					
 						<a class="nav-link" 
 						   aria-current="page" 

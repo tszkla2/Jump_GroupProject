@@ -94,6 +94,9 @@ public class BookServlet extends HttpServlet {
             case "/listPatron":
                 listBooks(request, response, "patron");
                 break;
+            case "/rent":
+                rentBook(request, response);
+                break;
             default:
 
                 response.sendRedirect("/");
@@ -109,8 +112,9 @@ public class BookServlet extends HttpServlet {
 
         request.setAttribute("allBooks", allBooks);
         request.setAttribute("user", user);
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("book-list.jsp");
+        RequestDispatcher dispatcher = null;
+        if(user == "librarian") {dispatcher = request.getRequestDispatcher("book-list-librarian.jsp");}
+        else { dispatcher = request.getRequestDispatcher("book-list-patron.jsp"); }
 
         dispatcher.forward(request, response);
     }
@@ -126,7 +130,7 @@ public class BookServlet extends HttpServlet {
 
         // redirect back to our product list page (should show table without product we just
         // deleted)
-        response.sendRedirect("list");
+        response.sendRedirect("listLibrarian");
     }
     
     private void goToEditBookForm(HttpServletRequest request, HttpServletResponse response) 
@@ -168,7 +172,7 @@ public class BookServlet extends HttpServlet {
         bookDao.updateBook(book);
 
         // redirect to our list products page once we finish updating info on product
-        response.sendRedirect("list");
+        response.sendRedirect("listLibrarian");
     }
 
     private void goToNewBookForm(HttpServletRequest request, HttpServletResponse response) 
@@ -194,7 +198,7 @@ public class BookServlet extends HttpServlet {
 		bookDao.addBook(book);
 		
 		// once added, redirect to the product list page
-		response.sendRedirect("list");
+		response.sendRedirect("listLibrarian");
 		
 	}
 
@@ -254,5 +258,11 @@ public class BookServlet extends HttpServlet {
 		
 		dispatcher.forward(request, response);
 	}
+
+    private void rentBook(HttpServletRequest request, HttpServletResponse response)  throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("rent.jsp");
+
+        dispatcher.forward(request, response);
+    }
 
 }
