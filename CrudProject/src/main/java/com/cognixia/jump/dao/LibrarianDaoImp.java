@@ -25,6 +25,7 @@ public class LibrarianDaoImp implements LibrarianDao, BookDao {
 	private static String UPDATE_BOOK_AVAILABILITY = "update book set rented = ? where isbn = ?";
 	private static String UPDATE_USERNAME = "update librarian set username = ?";
 	private static String UPDATE_PASSWORD = "update librarian set password = ?";
+	private static String GET_LIBRARIAN = "SELECT * FROM librarian WHERE username = ? AND password = ?";
 	
 	@Override
 	public List<Librarian> getAllLibrarians() {
@@ -203,7 +204,7 @@ public class LibrarianDaoImp implements LibrarianDao, BookDao {
 		
 		try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_USERNAME)) {
 
-			pstmt.setString(2, librarian.getUsername());
+			pstmt.setString(1, librarian.getUsername());
 
 			// at least one row updated
 			if (pstmt.executeUpdate() > 0) {
@@ -222,7 +223,7 @@ public class LibrarianDaoImp implements LibrarianDao, BookDao {
 		
 		try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_PASSWORD)) {
 
-			pstmt.setString(3, librarian.getPassword());
+			pstmt.setString(1, librarian.getPassword());
 
 			// at least one row updated
 			if (pstmt.executeUpdate() > 0) {
@@ -235,5 +236,36 @@ public class LibrarianDaoImp implements LibrarianDao, BookDao {
 		
 		return false;
 	}
+	
+	@Override
+	public Librarian getLibrarian(String username, String password) {
+		
+		Librarian librarian = null;
+		
+		try(PreparedStatement pstmt = conn.prepareStatement(GET_LIBRARIAN)) {
+			
+			pstmt.setString(1, username);
+			pstmt.setString(2, password);
+			
+			ResultSet rs = pstmt.executeQuery();
+			if(!rs.isBeforeFirst()) {
+				return librarian;
+			}
+			if(rs.next()) {
+				int librarian_id = rs.getInt("librarian_id");
+				String userName = rs.getString("username");
+				String passWord = rs.getString("password");
+				
+				librarian = new Librarian(librarian_id, userName, passWord);
+				return librarian;
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return librarian;
+		
+	}
+	
 	
 }

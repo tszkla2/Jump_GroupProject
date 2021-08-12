@@ -12,6 +12,6 @@ public interface LibrarianDao {
 	
 	public boolean updatePassword(Librarian Librarian);
 	
-	
+	public Librarian getLibrarian(String username, String password);
 
 }

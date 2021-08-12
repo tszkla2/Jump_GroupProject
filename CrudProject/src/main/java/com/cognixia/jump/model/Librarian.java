@@ -1,7 +1,7 @@
 package com.cognixia.jump.model;
 
 public class Librarian {
-	
+	//Sup
 	private int librarian_id;
 	private String username;
 	private String password;
