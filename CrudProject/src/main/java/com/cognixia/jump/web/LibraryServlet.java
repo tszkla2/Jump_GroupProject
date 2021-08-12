@@ -19,17 +19,22 @@ import com.cognixia.jump.dao.PatronDao;
 import com.cognixia.jump.dao.PatronDaoImp;
 import com.cognixia.jump.model.Patron;
 import com.cognixia.jump.model.Book;
+import com.cognixia.jump.dao.BookDaoImp;
 
 
 @WebServlet("/")
 public class LibraryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	private BookDaoImp bookDao;
 	private PatronDao patronDao;
+	private Patron loggedInPatron;
 
 	public void init(ServletConfig config) throws ServletException {
 		
+		bookDao = new BookDaoImp();
 		patronDao = new PatronDaoImp();
+		
 		
 	}
 
@@ -68,7 +73,7 @@ public class LibraryServlet extends HttpServlet {
 			goToLogin(request, response);
 			break;
 		
-		case "/patron": // delete a single product
+		case "/patron": 
 			loginPatron(request, response);
 			break;
 		
@@ -77,13 +82,20 @@ public class LibraryServlet extends HttpServlet {
 			goToUpdatePatronInfo(request, response);
 			break;
 			
+		case "/listPatron":
+            listBooks(request, response, "patron");
+            break;
+			
 		case "/checkoutbook": // redirect to page where we can add a new product
-			//goToNewProductForm(request, response);
+			checkoutBook(request, response);
 			break;
 			
 		case "/returnbook": // add product to db
-			//addNewProduct(request, response);
+			listRentedBooks(request, response);
 			break;
+		
+		case "/return":
+			returnBook(request, response);
 		
 		case "/logout": // patron logout
 			break;
@@ -115,6 +127,7 @@ public class LibraryServlet extends HttpServlet {
 		Patron patron = patronDao.getPatron(username, password);
 		
 		if(patron != null) {
+			loggedInPatron = patron; 
 			HttpSession session = request.getSession();
 			request.setAttribute("patron", patron);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("patron.jsp");
@@ -126,15 +139,6 @@ public class LibraryServlet extends HttpServlet {
 			dispatcher.forward(request, response);
 		}
 		
-		// grab values to find patron from library db
-//		String username = request.getParameter("username");
-//		String password = request.getParameter("password");
-//		
-//		Patron patron = patronDao.getPatron(username, password);
-//		
-//		request.setAttribute("patron", patron);
-//		RequestDispatcher dispatcher = request.getRequestDispatcher("patron.jsp");
-//		dispatcher.forward(request, response);
 	}
 	
 	private void goToUpdatePatronInfo(HttpServletRequest request, HttpServletResponse response) 
@@ -172,19 +176,53 @@ public class LibraryServlet extends HttpServlet {
 		response.sendRedirect("");
 	}
 	
+	private void listBooks(HttpServletRequest request, HttpServletResponse response, String user)
+			throws ServletException, IOException {
+		
+		 List<Book> allBooks = bookDao.getAllBooks();
+
+        request.setAttribute("allBooks", allBooks);
+        request.setAttribute("user", user);
+        request.setAttribute("patron", loggedInPatron);
+        RequestDispatcher dispatcher = null;
+        if(user == "librarian") {
+        	dispatcher = request.getRequestDispatcher("book-list-librarian.jsp");
+        }
+        else { 
+        	
+        	dispatcher = request.getRequestDispatcher("book-list-patron.jsp"); 
+        }
+
+        dispatcher.forward(request, response);
+		
+	}
+	
 	private void checkoutBook(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
 		// get the book isbn
 		String isbn = request.getParameter("isbn").trim();
 		// get the patron id
-		int id = Integer.parseInt(request.getParameter("id"));
+		//int id = Integer.parseInt(request.getParameter("id"));
 		
 		// create new book checkout record for patron and book
-		patronDao.checkoutBook(id, isbn);
+		patronDao.checkoutBook(loggedInPatron.getId(), isbn);
 		
-		// redirect to patron page
-		response.sendRedirect("");
+		response.sendRedirect("/CrudProject/listPatron");
+		
+		
+	}
+	
+	private void listRentedBooks(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		List<Book> patronBooks = patronDao.getPatronBooks(loggedInPatron.getId());
+		
+		request.setAttribute("patronBooks", patronBooks);
+		request.setAttribute("patron", loggedInPatron);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("returnbook.jsp");
+
+        dispatcher.forward(request, response);
 		
 	}
 	
@@ -194,13 +232,14 @@ public class LibraryServlet extends HttpServlet {
 		// get the book isbn
 		String isbn = request.getParameter("isbn").trim();
 		// get the patron id
-		int id = Integer.parseInt(request.getParameter("id"));
+		
+		request.setAttribute("patron", loggedInPatron);
 		
 		// return book/update book_checkout table with return date
-		patronDao.returnBook(id, isbn);
+		patronDao.returnBook(loggedInPatron.getId(), isbn);
 		
-		// redirect to patron page
-		response.sendRedirect("");
+		// redirect to returns page
+		response.sendRedirect("/CrudProject/returnbook");
 		
 	}
 

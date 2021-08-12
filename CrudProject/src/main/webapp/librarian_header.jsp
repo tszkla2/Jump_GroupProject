@@ -18,40 +18,35 @@
 	
 	<div class="container">
 
-		<h1 class="display-4">Signed in as a patron</h1>
+		<h1 class="display-4">Signed in as a Librarian</h1>
 	
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<div class="container-fluid">
-		
+			
+<!-- 				The home button-->				
+ 				<a class="navbar-brand" href="<%= request.getContextPath() %>/">Home</a>
+				
+				<button class="navbar-toggler" type="button"
+					data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+					aria-controls="navbarNavAltMarkup" aria-expanded="false"
+					aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				
+				
+				<!-- 				Login buttons-->				
+				
 				<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 					<div class="navbar-nav">
 					
-					<c:if test="${ patron.account_frozen == true }">
-					
-						<h2> Your Account is Frozen. Please wait for Librarian </h2>
-					
-					</c:if>
-					
-					<c:if test="${ patron.account_frozen == false }">
 					
 						<a class="nav-link" 
 							   aria-current="page" 
-							   href="<%= request.getContextPath() %>/listPatron">View Catalogue</a> 
+							   href="<%= request.getContextPath() %>/listLibrarian">Manage Catalog</a> 
 					
-						<a class="nav-link" 
-						   aria-current="page" 
-						   href="<%= request.getContextPath() %>/checkoutbook">Checkout Book</a> 
+					 	<a class="nav-link" 
+						   href="<%= request.getContextPath() %>/new">Add</a> 
 						
-						<a class="nav-link" 
-							aria-current="page" 
-						   href="<%= request.getContextPath() %>/returnbook">Return Book</a> 
-						   
-						   <a class="nav-link" 
-							aria-current="page"
-							pos 
-						   href="<%= request.getContextPath() %>/logout">Logout</a> 
-					</c:if>
-					
 					</div>
 				</div>
 				

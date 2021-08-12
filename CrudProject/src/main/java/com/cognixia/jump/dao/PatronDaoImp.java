@@ -17,11 +17,12 @@ import com.cognixia.jump.model.Patron;
 public class PatronDaoImp implements PatronDao{
 
 	public static final Connection conn = ConnectionManager.getConnection();
-	
+	//, book_checkout.checkedout, book_checkout.due_date, book_checkout.returned
 	private static String GET_ALL_PATRONS = "SELECT * FROM patron";
 	private static String GET_PATRON_ID = "SELECT patron_id FROM patron WHERE username = ?";
-	private static String SELECT_ALL_PATRON_BOOKS = "SELECT book.isbn, book.title, book.desc, book.rented, book.added_to_library from book "
-													+ "INNER JOIN book_checkout ON book.isbn=book_checkout.isbn WHERE book_checkout.patron_id = ? ";
+	private static String SELECT_PATRON_BOOKS = "";
+	private static String SELECT_ALL_PATRON_BOOKS = "SELECT distinct book.isbn, book.title, book.descr, book.rented, book.added_to_library from book "
+													+ "INNER JOIN book_checkout ON book.isbn=book_checkout.isbn WHERE book_checkout.patron_id = ? AND returned IS NULL ";
 	private static String ADD_PATRON = "INSERT INTO patron (first_name, last_name, username, password) VALUES (?, ?, ?, ?)";
 	private static String GET_PATRON = "SELECT * FROM patron WHERE username = ? AND password = ?";
 	private static String GET_PATRON_BY_ID = "SELECT * FROM patron WHERE patron_id = ?";
