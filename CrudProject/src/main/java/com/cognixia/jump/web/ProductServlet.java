@@ -17,7 +17,7 @@ import com.cognixia.jump.dao.ProductDao;
 import com.cognixia.jump.dao.ProductDaoImp;
 import com.cognixia.jump.model.Product;
 
-@WebServlet("/")
+
 public class ProductServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

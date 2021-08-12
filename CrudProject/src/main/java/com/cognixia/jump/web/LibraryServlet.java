@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.cognixia.jump.connection.ConnectionManager;
 import com.cognixia.jump.dao.PatronDao;
@@ -61,8 +63,12 @@ public class LibraryServlet extends HttpServlet {
 		case "/register": // go to product list page
 			//listProducts(request, response);
 			break;
+			
+		case "/login":
+			goToLogin(request, response);
+			break;
 		
-		case "/login": // delete a single product
+		case "/patron": // delete a single product
 			loginPatron(request, response);
 			break;
 		
@@ -91,18 +97,44 @@ public class LibraryServlet extends HttpServlet {
 		
 	}
 	
+	private void goToLogin(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		response.sendRedirect("login.jsp");
+		
+	}
+	
 	private void loginPatron(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		// grab values to find patron from library db
+		PrintWriter out = response.getWriter();
+		
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		
 		Patron patron = patronDao.getPatron(username, password);
 		
-		request.setAttribute("patron", patron);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("patron.jsp");
-		dispatcher.forward(request, response);
+		if(patron != null) {
+			HttpSession session = request.getSession();
+			request.setAttribute("patron", patron);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("patron.jsp");
+			dispatcher.forward(request, response);
+		}
+		else {
+			out.print("Sorry, username or password error!");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+			dispatcher.forward(request, response);
+		}
+		
+		// grab values to find patron from library db
+//		String username = request.getParameter("username");
+//		String password = request.getParameter("password");
+//		
+//		Patron patron = patronDao.getPatron(username, password);
+//		
+//		request.setAttribute("patron", patron);
+//		RequestDispatcher dispatcher = request.getRequestDispatcher("patron.jsp");
+//		dispatcher.forward(request, response);
 	}
 	
 	private void goToUpdatePatronInfo(HttpServletRequest request, HttpServletResponse response) 

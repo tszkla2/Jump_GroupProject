@@ -8,7 +8,7 @@ public class ConnectionManager {
 	
 	// Windows: jdbc:mysql://localhost:3306/crud_db
 	// Mac/Linux: jdbc:mysql://localhost:3306/crud_db?serverTimezone=EST5EDT
-	private static final String URL = "jdbc:mysql://localhost:3306/crud_db?serverTimezone=EST5EDT";
+	private static final String URL = "jdbc:mysql://localhost:3306/library?serverTimezone=EST5EDT";
 	private static final String USERNAME = "root";
 	private static final String PASSWORD = "pebbles10"; // Windows: root | Mac/Linux: Root@123
 	
