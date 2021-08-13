@@ -284,8 +284,9 @@ public class LibrarianDaoImp implements LibrarianDao, BookDao {
                 String lastName = rs.getString("last_name");
 				String username = rs.getString("username");
 				String password = rs.getString("password");
+                Boolean frozen = rs.getBoolean("account_frozen");
 				
-				allPatrons.add(new Patron(patron_id, firstName, lastName, username, password));
+				allPatrons.add(new Patron(patron_id, firstName, lastName, username, password, frozen));
 				
 			}
 			

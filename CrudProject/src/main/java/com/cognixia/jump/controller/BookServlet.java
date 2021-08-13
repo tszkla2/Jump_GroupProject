@@ -391,6 +391,7 @@ public class BookServlet extends HttpServlet {
         List<Patron> allPatrons = librarianDao.getAllPatrons();
 
         request.setAttribute("allPatrons", allPatrons);
+        System.out.println(allPatrons.get(0).toString());
         request.setAttribute("librarian", loggedInLibrarian);
         RequestDispatcher dispatcher = null;
         dispatcher = request.getRequestDispatcher("manage-patrons.jsp");

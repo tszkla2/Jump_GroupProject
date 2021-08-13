@@ -13,6 +13,7 @@
 				<th>Title</th>
 				<th>Description</th>
 				<th>Rented</th>
+				<th>Added to Lib</th>
 			</tr>
 		</thead>
 		
@@ -36,21 +37,9 @@
 					<td>
 						<c:out value="${ book.rented }" />
 					</td>
-					
-<%--					<td>
-						
-						<a href="edit?isbn=<c:out value='${ book.isbn }' />">
-							<button class="btn btn-primary">Edit</button>
-						</a>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<a href="delete?isbn=<c:out value='${ book.isbn }' />">
-						
-							<button class="btn btn-danger">Delete</button>
-							
-						</a>
-						
+					<td>
+						<c:out value="${book.added_to_library}" />
 					</td>
---%>
 				</tr>
 			
 			</c:forEach>

@@ -12,7 +12,8 @@
 				<th>#</th>
 				<th>Title</th>
 				<th>Description</th>
-				<th>Rented</th>
+				<th>Manage</th>
+                
 			</tr>
 		</thead>
 		
@@ -32,10 +33,6 @@
 					
 					<td>
 						<c:out value="${ book.description }" />
-					</td>
-					
-					<td>
-						<c:out value="${ book.rented }" />
 					</td>
 					
 					<td>
