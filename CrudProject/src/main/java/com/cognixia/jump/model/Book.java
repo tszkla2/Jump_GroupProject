@@ -59,9 +59,9 @@ public class Book {
 		this.description = description;
 	}
 
-	@Override
-	public String toString() {
-		return "Book [isbn=" + isbn + ", title=" + title  + ", description=" + description + ", available=" + rented + "]";
-	}
+//	@Override
+//	public String toString() {
+//		return "Book [isbn=" + isbn + ", title=" + title  + ", description=" + description + ", available=" + rented + "]";
+//	}
 
 }

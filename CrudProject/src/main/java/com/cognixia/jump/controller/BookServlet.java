@@ -66,14 +66,19 @@ public class BookServlet extends HttpServlet {
             // case "/list":
             //     listBooks(request, response);
             //     break;
+        
+	    
             case "/delete":
                 deleteBook(request, response);
                 break;
             case "/edit":
-                goToEditBookForm(request, response);
+            	goToEditBookForm(request, response);
                 break;
             case "/update":
                 updateBook(request, response);
+                break;
+            case "/updating":
+                handleUserUpdateInput(request, response);
                 break;
             case "/new":
                 goToNewBookForm(request, response);
@@ -129,21 +134,82 @@ public class BookServlet extends HttpServlet {
 
     }
     
-    private void listBooks(HttpServletRequest request, HttpServletResponse response, String user) 
+    private void handleUserUpdateInput(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+    	
+    	 String isbn = request.getParameter("isbn");
+         String title = request.getParameter("title");
+         boolean rented = Boolean.parseBoolean(request.getParameter("rented"));
+         String description = request.getParameter("description");
+         
+       Book book = new Book(isbn, title, description, rented, new Date());
+
+       bookDao.updateBook(book);
+       
+       
+       List<Book> allBooks = bookDao.getAllBooks();
+
+       request.setAttribute("allBooks", allBooks);
+       request.setAttribute("patron", loggedInPatron);
+       request.setAttribute("librarian", loggedInLibrarian);
+
+       RequestDispatcher dispatcher = request.getRequestDispatcher("updatebook.jsp");
+   	
+   	dispatcher.forward(request, response);
+   	}
+    
+   
+    private void goToEditBookForm(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
 
-        List<Book> allBooks = bookDao.getAllBooks();
+	List<Book> allBooks = bookDao.getAllBooks();
 
-        request.setAttribute("allBooks", allBooks);
-        request.setAttribute("user", user);
-        request.setAttribute("patron", loggedInPatron);
-        request.setAttribute("librarian", loggedInLibrarian);
-        RequestDispatcher dispatcher = null;
-        if(user == "librarian") {dispatcher = request.getRequestDispatcher("book-list-librarian.jsp");}
-        else { dispatcher = request.getRequestDispatcher("book-list-patron.jsp"); }
+    request.setAttribute("allBooks", allBooks);
+    request.setAttribute("patron", loggedInPatron);
+    request.setAttribute("librarian", loggedInLibrarian);
+   
+    RequestDispatcher dispatcher = request.getRequestDispatcher("updatebook.jsp");
+	
+	dispatcher.forward(request, response);
+        
 
-        dispatcher.forward(request, response);
     }
+    
+    private void updateBook(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+
+       
+
+        // grab info to do update for product submitted by form
+        String isbn = request.getParameter("isbn");
+        String title = request.getParameter("title");
+        boolean rented = Boolean.parseBoolean(request.getParameter("rented"));
+        String description = request.getParameter("description");
+
+        System.out.println("ISBN IS "  + isbn);
+        System.out.println("title IS "  + title);
+        System.out.println("rented IS "  + rented);
+        System.out.println("description IS "  + description);
+
+		
+		
+		// get the full row info for the product
+		Book book = bookDao.getBookByIsbn(isbn);
+		
+		// send product to edit to new page
+		request.setAttribute("book", book);
+
+		// forward info and redirect to that page
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("update-book-form.jsp");
+		
+		dispatcher.forward(request, response);
+
+        
+
+    }
+    
+    
     
     private void deleteBook(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
@@ -159,47 +225,33 @@ public class BookServlet extends HttpServlet {
         response.sendRedirect("listLibrarian");
     }
     
-    private void goToEditBookForm(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
+//    private void goToUpdateDisplay(HttpServletRequest request, HttpServletResponse response) 
+//            throws ServletException, IOException {
+//        
+//	
+//        
+//
+//    }
+    private void test(HttpServletRequest request, HttpServletResponse response)  throws ServletException, IOException {
+ 		// TODO Auto-generated method stub
+ 		System.out.println("hiadadadadaaaada");
+ 	}
 
-        // get id of product we need to edit/update
-        String isbn = request.getParameter("isbn");
-        
-        System.out.println(isbn);
-		
-		// get full row info for the product
-        Book book = bookDao.getBookByIsbn(isbn);
-        
-        System.out.println(book.toString());
-		
-		// send product info to the form page so it can be updated
-		request.setAttribute("book", book);
+ 	private void listBooks(HttpServletRequest request, HttpServletResponse response, String user) 
+             throws ServletException, IOException {
 
-        // forward info and redirect to that page
+         List<Book> allBooks = bookDao.getAllBooks();
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("book-form.jsp");
+         request.setAttribute("allBooks", allBooks);
+         request.setAttribute("user", user);
+         request.setAttribute("patron", loggedInPatron);
+         request.setAttribute("librarian", loggedInLibrarian);
+         RequestDispatcher dispatcher = null;
+         if(user == "librarian") {dispatcher = request.getRequestDispatcher("book-list-librarian.jsp");}
+         else { dispatcher = request.getRequestDispatcher("book-list-patron.jsp"); }
 
-        dispatcher.forward(request, response);
-    }
-    
-    private void updateBook(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
-
-        // grab info to do update for product submitted by form
-        String isbn = request.getParameter("isbn").trim();
-        String title = request.getParameter("title").trim();
-        boolean rented = Boolean.parseBoolean(request.getParameter("rented").trim());
-        String description = request.getParameter("description").trim();
-
-        // create the product object
-        Book book = new Book(isbn, title, description, rented, new Date());
-
-        // pass object to update from the dao
-        bookDao.updateBook(book);
-
-        // redirect to our list products page once we finish updating info on product
-        response.sendRedirect("listLibrarian");
-    }
+         dispatcher.forward(request, response);
+     }
 
     private void goToNewBookForm(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
