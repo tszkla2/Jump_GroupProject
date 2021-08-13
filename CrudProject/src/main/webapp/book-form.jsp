@@ -26,6 +26,7 @@
 		
 			<%-- hidden input, won't show up on the page, but will pass our id for the product --%>
 			<input type="hidden" name="isbn" value="<c:out value='${ book.isbn }' />">
+			<input type="hidden" name="rented" value="<c:out value='${ rented.isbn }' />">
 		
 		</c:if>
 		
