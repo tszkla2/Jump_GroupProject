@@ -42,10 +42,20 @@
 					
 						<a class="nav-link" 
 							   aria-current="page" 
-							   href="<%= request.getContextPath() %>/listLibrarian">Manage Catalog</a> 
+							   href="<%= request.getContextPath() %>/listLibrarian">View Books</a> 
 					
-					 	<a class="nav-link" 
-						   href="<%= request.getContextPath() %>/new">Add</a> 
+						<a class="nav-link" 
+						   aria-current="page" 
+						   href="<%= request.getContextPath() %>/addbook">Add Book</a> 
+						
+						<a class="nav-link" 
+							aria-current="page" 
+						   href="<%= request.getContextPath() %>/updatebook">Update Book</a> 
+						   
+						   <a class="nav-link" 
+							aria-current="page"
+							pos 
+						   href="<%= request.getContextPath() %>/logout">Logout</a> 
 						
 					</div>
 				</div>

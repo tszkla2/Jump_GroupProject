@@ -13,7 +13,7 @@
 				<th>Title</th>
 				<th>Description</th>
 				<th>Rented</th>
-				<th>Actions</th>
+			<%--<th>Actions</th> --%>				
 			</tr>
 		</thead>
 		
@@ -38,7 +38,7 @@
 						<c:out value="${ book.rented }" />
 					</td>
 					
-					<td>
+<%--					<td>
 						
 						<a href="edit?isbn=<c:out value='${ book.isbn }' />">
 							<button class="btn btn-primary">Edit</button>
@@ -51,7 +51,7 @@
 						</a>
 						
 					</td>
-
+--%>
 				</tr>
 			
 			</c:forEach>

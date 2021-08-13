@@ -3,7 +3,7 @@
 <div class="container">
 	
 
-		<% String formType = "patron"; %>
+		<% String formType = "trylogin"; %>
 
 
 	<!-- if need to add a new product: action = add
@@ -31,15 +31,15 @@
 	    
 	  </div>
 	  
-	 <INPUT TYPE="radio"class="form-check-input" type="checkbox" name="choice" value="0"/>Patron
-	<INPUT TYPE="radio"  class="form-check-input" type="checkbox" NAME="choice" VALUE="1"/>Librarian
+	<INPUT TYPE="radio" class="form-check-input" type="checkbox" name="choice" value="0"/>Patron
+	<INPUT TYPE="radio"  class="form-check-input" type="checkbox" name="choice" value="1"/>Librarian
 	
 	  <br>
 	  <button type="submit" 
 	  		  class="btn btn-primary"
 	  		  style="margin:10px">Submit</button>
-	  		  
-		<%  formType = "patron"; %>
+		
+<%--		<%  formType = "librarian"; %> --%>
 	 
 	</form>
 
