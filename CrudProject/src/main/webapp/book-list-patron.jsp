@@ -39,7 +39,7 @@
 						<c:out value="${ book.rented }" />
 					</td>
 					<td>
-						<a href="edit?isbn=<c:out value='${ book.isbn }' />">
+						<a href="rent?isbn=<c:out value='${ book.isbn }' />">
 							<button class="btn btn-primary">Rent</button>
 						</a>
 					</td>
