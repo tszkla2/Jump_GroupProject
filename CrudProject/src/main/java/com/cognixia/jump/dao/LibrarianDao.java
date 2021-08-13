@@ -3,6 +3,7 @@ package com.cognixia.jump.dao;
 import java.util.List;
 
 import com.cognixia.jump.model.Librarian;
+import com.cognixia.jump.model.Patron;
 
 public interface LibrarianDao { 
 	
@@ -13,5 +14,7 @@ public interface LibrarianDao {
 	public boolean updatePassword(Librarian Librarian);
 	
 	public Librarian getLibrarian(String username, String password);
+
+	public List<Patron> getAllPatrons();
 
 }

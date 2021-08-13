@@ -69,18 +69,29 @@ public class BookServlet extends HttpServlet {
             case "/delete":
                 deleteBook(request, response);
                 break;
+<<<<<<< Updated upstream
             case "/deleteform":
                 goToDeleteBookForm(request, response);
                 break;
+=======
+                
+>>>>>>> Stashed changes
             case "/edit":
                 goToEditBookForm(request, response);
                 break;
+                
             case "/update":
                 updateBook(request, response);
                 break;
+                
+//            case "/updating":
+//                handleUserUpdateInput(request, response);
+//                break;
+                
             case "/new":
                 goToNewBookForm(request, response);
                 break;
+                
             case "/add":
                 addNewBook(request, response);
                 break;
@@ -109,8 +120,8 @@ public class BookServlet extends HttpServlet {
                 listBooks(request, response,"librarian");
                 break;
             
-            case "/listPatron":
-                listBooks(request, response, "patron");
+            case "/manageCatalogn":
+                listBooks(request, response);
                 break;
             case "/rent":
                 rentBook(request, response);
@@ -124,11 +135,88 @@ public class BookServlet extends HttpServlet {
             case "/logout":
             	response.sendRedirect("/CrudProject");
             	break;
+            case "/managePatrons":
+                managePatrons(request, response);
+                break;
             default:
 
                 response.sendRedirect("/");
                 break;
         }
+
+    }
+    
+//    private void handleUserUpdateInput(HttpServletRequest request, HttpServletResponse response) 
+//            throws ServletException, IOException {
+//    	
+//    	 String isbn = request.getParameter("isbn");
+//         String title = request.getParameter("title");
+//         boolean rented = Boolean.parseBoolean(request.getParameter("rented"));
+//         String description = request.getParameter("description");
+//         
+//       Book book = new Book(isbn, title, description, rented, new Date());
+//
+//       bookDao.updateBook(book);
+//       
+//       
+//       List<Book> allBooks = bookDao.getAllBooks();
+//
+//       request.setAttribute("allBooks", allBooks);
+//       request.setAttribute("patron", loggedInPatron);
+//       request.setAttribute("librarian", loggedInLibrarian);
+//
+//       RequestDispatcher dispatcher = request.getRequestDispatcher("updatebook.jsp");
+//   	
+//   	dispatcher.forward(request, response);
+//   	}
+    
+    private void goToEditBookForm(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+
+	List<Book> allBooks = bookDao.getAllBooks();
+
+    request.setAttribute("allBooks", allBooks);
+    request.setAttribute("patron", loggedInPatron);
+    request.setAttribute("librarian", loggedInLibrarian);
+   
+    RequestDispatcher dispatcher = request.getRequestDispatcher("updatebook.jsp");
+	
+	dispatcher.forward(request, response);
+        
+
+    }
+    
+    private void updateBook(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+
+       
+
+        // grab info to do update for product submitted by form
+        String isbn = request.getParameter("isbn");
+        String title = request.getParameter("title");
+        boolean rented = Boolean.parseBoolean(request.getParameter("rented"));
+        String description = request.getParameter("description");
+
+        System.out.println("ISBN IS "  + isbn);
+        System.out.println("title IS "  + title);
+        System.out.println("rented IS "  + rented);
+        System.out.println("description IS "  + description);
+
+		
+		
+		// get the full row info for the product
+		Book book = bookDao.getBookByIsbn(isbn);
+		
+		// send product to edit to new page
+		request.setAttribute("book", book);
+
+		// forward info and redirect to that page
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("update-book-form.jsp");
+		
+		dispatcher.forward(request, response);
+
+        
 
     }
     
@@ -144,6 +232,19 @@ public class BookServlet extends HttpServlet {
         RequestDispatcher dispatcher = null;
         if(user == "librarian") {dispatcher = request.getRequestDispatcher("book-list-librarian.jsp");}
         else { dispatcher = request.getRequestDispatcher("book-list-patron.jsp"); }
+
+        dispatcher.forward(request, response);
+    }
+
+    private void listBooks(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+
+        List<Book> allBooks = bookDao.getAllBooks();
+
+        request.setAttribute("allBooks", allBooks);
+        request.setAttribute("librarian", loggedInLibrarian);
+        RequestDispatcher dispatcher = null;
+        dispatcher = request.getRequestDispatcher("book-list-manage.jsp");
 
         dispatcher.forward(request, response);
     }
@@ -167,6 +268,7 @@ public class BookServlet extends HttpServlet {
         response.sendRedirect("listLibrarian");
     }
     
+<<<<<<< Updated upstream
     private void goToDeleteBookForm(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
 
@@ -217,6 +319,8 @@ public class BookServlet extends HttpServlet {
         response.sendRedirect("listLibrarian");
     }
 
+=======
+>>>>>>> Stashed changes
     private void goToNewBookForm(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
 
@@ -225,16 +329,16 @@ public class BookServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
     
+    
     private void addNewBook(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		
 		// grab values to create product from our form
 		String title = request.getParameter("title").trim();
-        boolean rented = Boolean.parseBoolean(request.getParameter("rented").trim());
         String description = request.getParameter("description").trim();
 		
         // create object for product
-		Book book = new Book(Utility.randomIsbn(), title, description, rented, new Date());
+		Book book = new Book(Utility.randomIsbn(), title, description, false, new Date());
 		
 		// call dao to add product to our database
 		bookDao.addBook(book);
@@ -383,4 +487,18 @@ public class BookServlet extends HttpServlet {
 		
 	}
 
+    private void managePatrons(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+
+        List<Patron> allPatrons = librarianDao.getAllPatrons();
+
+        request.setAttribute("allPatrons", allPatrons);
+        System.out.println(allPatrons.get(0).toString());
+        request.setAttribute("librarian", loggedInLibrarian);
+        RequestDispatcher dispatcher = null;
+        dispatcher = request.getRequestDispatcher("manage-patrons.jsp");
+
+        dispatcher.forward(request, response);
+
+    }
 }

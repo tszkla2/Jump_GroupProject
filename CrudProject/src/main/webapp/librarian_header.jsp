@@ -50,16 +50,27 @@
 						    
 					 	<a class="nav-link" 
 					 	 	aria-current="page" 
+<<<<<<< Updated upstream
 						    href="<%= request.getContextPath() %>/deleteform">Delete Book</a> 						    
 						   
 					 	<a class="nav-link" 
 					 	 	aria-current="page" 
 						    href="<%= request.getContextPath() %>/edit">Update Book</a> 						   
+=======
+						    href="<%= request.getContextPath() %>/manageCatalog">Manage Books</a> 		
+
+						<a class="nav-link" 
+							aria-current="page"
+							pos 
+						   href="<%= request.getContextPath() %>/managePatrons">Manage Patrons</a>				    					   
+>>>>>>> Stashed changes
 						   
 						<a class="nav-link" 
 							aria-current="page"
 							pos 
 						   href="<%= request.getContextPath() %>/logout">Logout</a> 
+						
+						
 						
 					</div>
 				</div>

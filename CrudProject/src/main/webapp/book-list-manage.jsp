@@ -12,18 +12,15 @@
 				<th>#</th>
 				<th>Title</th>
 				<th>Description</th>
-				<th>Rented</th>
-<<<<<<< Updated upstream
-				<th>Date Added</th>
-=======
-				<th>Added to Lib</th>
->>>>>>> Stashed changes
+				<th>Manage</th>
+                
 			</tr>
 		</thead>
 		
 		<tbody>
 		
 			<c:forEach var="book" items="${ allBooks }">
+                <c:if test="${ book.rented == false}">
 				
 				<tr>
 					<td>
@@ -39,21 +36,21 @@
 					</td>
 					
 					<td>
-						<c:out value="${ book.rented }" />
+						
+						<a href="edit?isbn=<c:out value='${ book.isbn }' />">
+							<button class="btn btn-primary">Edit</button>
+						</a>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="delete?isbn=<c:out value='${ book.isbn }' />">
+						
+							<button class="btn btn-danger">Delete</button>
+							
+						</a>
+						
 					</td>
-<<<<<<< Updated upstream
-					
-					<td>
-						<c:out value="${ book.added_to_library }" />
-					</td>
-					
 
-=======
-					<td>
-						<c:out value="${book.added_to_library}" />
-					</td>
->>>>>>> Stashed changes
 				</tr>
+                </c:if>
 			
 			</c:forEach>
 		
@@ -65,4 +62,12 @@
 </div>
 
 
-<%@ include file="footer.jsp" %>
+<%@ include file="footer.jsp" %><html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+</body>
+</html>

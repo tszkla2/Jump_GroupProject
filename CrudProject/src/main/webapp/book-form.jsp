@@ -39,6 +39,7 @@
 	  
 	  <div class="form-group">
 	  
+<<<<<<< Updated upstream
 	    <label for="rented">Rented</label>
 	    <input type="boolean" class="form-control" id="rented" name="rented"
 	    	value="<c:out value='${ book.rented }' />" required>
@@ -47,6 +48,8 @@
 	  
 	  <div class="form-group">
 	  
+=======
+>>>>>>> Stashed changes
 	    <label for="description">Description</label>
 	    <input type="text" class="form-control" id="description" name="description"
 	    	value="<c:out value='${ book.description }' />" required>
