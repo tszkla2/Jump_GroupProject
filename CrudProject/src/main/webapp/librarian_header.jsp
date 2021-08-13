@@ -50,7 +50,7 @@
 						    
 					 	<a class="nav-link" 
 					 	 	aria-current="page" 
-						    href="<%= request.getContextPath() %>/delete">Delete Book</a> 						    
+						    href="<%= request.getContextPath() %>/deleteform">Delete Book</a> 						    
 						   
 					 	<a class="nav-link" 
 					 	 	aria-current="page" 

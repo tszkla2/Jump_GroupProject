@@ -39,7 +39,7 @@
 	  
 	  <div class="form-group">
 	  
-	    <label for="rented">Availability</label>
+	    <label for="rented">Rented</label>
 	    <input type="boolean" class="form-control" id="rented" name="rented"
 	    	value="<c:out value='${ book.rented }' />" required>
 	    

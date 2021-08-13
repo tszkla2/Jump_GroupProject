@@ -69,6 +69,9 @@ public class BookServlet extends HttpServlet {
             case "/delete":
                 deleteBook(request, response);
                 break;
+            case "/deleteform":
+                goToDeleteBookForm(request, response);
+                break;
             case "/edit":
                 goToEditBookForm(request, response);
                 break;
@@ -148,15 +151,28 @@ public class BookServlet extends HttpServlet {
     private void deleteBook(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
 
-        // get the id for the product to delete
-        String isbn = request.getParameter("isbn");
+    	String isbn = null;
+        String title = null;
+        boolean rented = false;
+        String description = null;
+        Date date = null;
 
-        // use our dao to do our delete
-        bookDao.deleteBook(isbn);
+        // create the product object
+		Book book = new Book(isbn, title, description, rented, date);
 
-        // redirect back to our product list page (should show table without product we just
-        // deleted)
+        // pass object to update from the dao
+        bookDao.updateBook(book);
+
+        // redirect to our list products page once we finish updating info on product
         response.sendRedirect("listLibrarian");
+    }
+    
+    private void goToDeleteBookForm(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("book-form-delete.jsp");
+
+        dispatcher.forward(request, response);
     }
     
     private void goToEditBookForm(HttpServletRequest request, HttpServletResponse response) 
