@@ -69,7 +69,10 @@ public class BookServlet extends HttpServlet {
         
 	    
             case "/delete":
-                deleteBook(request, response);
+            	goToDeleteBookForm(request, response);
+                break;
+            case "/deletedbook":
+            	deleteBook(request, response);
                 break;
             case "/edit":
             	goToEditBookForm(request, response);
@@ -214,28 +217,45 @@ public class BookServlet extends HttpServlet {
     private void deleteBook(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
 
-        // get the id for the product to delete
+    	 // grab info to do update for product submitted by form
         String isbn = request.getParameter("isbn");
+      
+        System.out.println("ISBN IS "  + isbn);
+        
+        int isbnInt =Integer.parseInt(isbn);
+        
+        
+        
+        
+		boolean book = bookDao.deleteBook(isbn);
+		
+        response.sendRedirect("/delete");
 
-        // use our dao to do our delete
-        bookDao.deleteBook(isbn);
+		
 
-        // redirect back to our product list page (should show table without product we just
-        // deleted)
-        response.sendRedirect("listLibrarian");
-    }
+
     
+
+    }
+    private void goToDeleteBookForm(HttpServletRequest request, HttpServletResponse response)  throws ServletException, IOException {
+
+
+    	List<Book> allBooks = bookDao.getAllBooks();
+
+        request.setAttribute("allBooks", allBooks);
+        request.setAttribute("patron", loggedInPatron);
+        request.setAttribute("librarian", loggedInLibrarian);
+       
+    	
+		RequestDispatcher dispatcher = request.getRequestDispatcher("delete-book.jsp");
+		
+		dispatcher.forward(request, response);
+ 		
+
+ 	}
 //    private void goToUpdateDisplay(HttpServletRequest request, HttpServletResponse response) 
 //            throws ServletException, IOException {
-//        
-//	
-//        
-//
-//    }
-    private void test(HttpServletRequest request, HttpServletResponse response)  throws ServletException, IOException {
- 		// TODO Auto-generated method stub
- 		System.out.println("hiadadadadaaaada");
- 	}
+
 
  	private void listBooks(HttpServletRequest request, HttpServletResponse response, String user) 
              throws ServletException, IOException {

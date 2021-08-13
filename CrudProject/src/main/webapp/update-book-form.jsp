@@ -25,14 +25,26 @@
 	    
 	  </div>
 	  
-	  <div class="form-group">
 	  
-	    <label for="rented">Availability</label>
-	    <input type="boolean" class="form-control" id="rented" name="rented"
-	    	value="<c:out value='${ book.rented }' />" required>
+	  <%-- <div class="form-group">
+	  
+	    <label for="addTo">Added to Library</label>
+	    <input type="text" class="form-control" id="addTo" name="addTo"
+	    	value="<c:out value='${ book.added_to_library }' />" required>
 	    
+	  </div> --%>
+	  
+	<div class="form-group">
+	  	 <label for="rented">Availability</label> <br>
+	  
+		 <select name="rented">
+		    <option value="0">False</option>
+		    <option value="1">True</option>
+		  </select>
 	  </div>
 	  
+	  </div>
+	  <div class="form-group">
 	  <div class="form-group">
 	  
 	    <label for="description">Description</label>
