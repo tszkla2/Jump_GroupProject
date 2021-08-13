@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Product Catalog</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
@@ -20,11 +21,11 @@
 
 		<h1 class="display-4">Cognixia JUMP Library</h1>
 	
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<nav class="navbar navbar-expand-lg navbar navbar-dark bg-primary">
 			<div class="container-fluid">
 			
 <!-- 				The home button-->				
- 				<a class="navbar-brand" href="<%= request.getContextPath() %>/">Home</a>
+ 				<a class="navbar-brand" href="<%= request.getContextPath() %>/"><i class="fa fa-home"></i>Home</a>
 				
 				<button class="navbar-toggler" type="button"
 					data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"

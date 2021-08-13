@@ -14,6 +14,7 @@
 				<th>Description</th>
 				<th>Checked Out</th>
 				<th>Due Date</th>
+				<th>Actions</th>
 			</tr>
 		</thead>
 		
