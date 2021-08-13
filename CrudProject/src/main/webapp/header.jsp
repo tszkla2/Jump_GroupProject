@@ -40,11 +40,13 @@
 					<div class="navbar-nav">
 					
 						<a class="nav-link" 
-						   aria-current="page" 
-						   href="<%= request.getContextPath() %>/about">About</a> 
+						   aria-current="page" href="<%= request.getContextPath() %>/about">About</a> 
+
 						
 						<a class="nav-link" 
 						   href="<%= request.getContextPath() %>/login">Login</a> 
+
+
 						
 					</div>
 				</div>

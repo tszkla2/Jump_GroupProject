@@ -19,3 +19,4 @@ public interface BookDao {
 	public boolean updateBookAvailability(Book book);
 
 }
+

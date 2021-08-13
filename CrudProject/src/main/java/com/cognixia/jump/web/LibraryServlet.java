@@ -22,7 +22,7 @@ import com.cognixia.jump.model.Book;
 import com.cognixia.jump.dao.BookDaoImp;
 
 
-@WebServlet("/")
+
 public class LibraryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -69,35 +69,36 @@ public class LibraryServlet extends HttpServlet {
 			//listProducts(request, response);
 			break;
 			
-		case "/login":
-			goToLogin(request, response);
-			break;
+//		case "/login":
+//			goToLogin(request, response);
+//			break;
 		
-		case "/patron": 
-			loginPatron(request, response);
-			break;
+//		case "/patron": 
+//			loginPatron(request, response);
+//			break;
 		
 			
 		case "/update_patron_info": // perform update on Patron
 			goToUpdatePatronInfo(request, response);
 			break;
 			
-		case "/listPatron":
-            listBooks(request, response, "patron");
-            break;
+//		case "/listPatron":
+//            listBooks(request, response, "patron");
+//            break;
 			
 		case "/checkoutbook": // redirect to page where we can add a new product
 			checkoutBook(request, response);
 			break;
 			
-		case "/returnbook": // add product to db
-			listRentedBooks(request, response);
-			break;
-		
-		case "/return":
-			returnBook(request, response);
+//		case "/returnbook": // add product to db
+//			listRentedBooks(request, response);
+//			break;
+//		
+//		case "/return":
+//			returnBook(request, response);
 		
 		case "/logout": // patron logout
+			response.sendRedirect("/CrudProject");
 			break;
 			
 		default:
@@ -109,37 +110,37 @@ public class LibraryServlet extends HttpServlet {
 		
 	}
 	
-	private void goToLogin(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
-		response.sendRedirect("login.jsp");
-		
-	}
+//	private void goToLogin(HttpServletRequest request, HttpServletResponse response)
+//			throws ServletException, IOException {
+//		
+//		response.sendRedirect("login.jsp");
+//		
+//	}
 	
-	private void loginPatron(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
-		PrintWriter out = response.getWriter();
-		
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-		
-		Patron patron = patronDao.getPatron(username, password);
-		
-		if(patron != null) {
-			loggedInPatron = patron; 
-			HttpSession session = request.getSession();
-			request.setAttribute("patron", patron);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("patron.jsp");
-			dispatcher.forward(request, response);
-		}
-		else {
-			out.print("Sorry, username or password error!");
-			RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
-			dispatcher.forward(request, response);
-		}
-		
-	}
+//	private void loginPatron(HttpServletRequest request, HttpServletResponse response)
+//			throws ServletException, IOException {
+//		
+//		PrintWriter out = response.getWriter();
+//		
+//		String username = request.getParameter("username");
+//		String password = request.getParameter("password");
+//		
+//		Patron patron = patronDao.getPatron(username, password);
+//		
+//		if(patron != null) {
+//			loggedInPatron = patron; 
+//			HttpSession session = request.getSession();
+//			request.setAttribute("patron", patron);
+//			RequestDispatcher dispatcher = request.getRequestDispatcher("patron.jsp");
+//			dispatcher.forward(request, response);
+//		}
+//		else {
+//			out.print("Sorry, username or password error!");
+//			RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+//			dispatcher.forward(request, response);
+//		}
+//		
+//	}
 	
 	private void goToUpdatePatronInfo(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
@@ -176,34 +177,32 @@ public class LibraryServlet extends HttpServlet {
 		response.sendRedirect("");
 	}
 	
-	private void listBooks(HttpServletRequest request, HttpServletResponse response, String user)
-			throws ServletException, IOException {
-		
-		 List<Book> allBooks = bookDao.getAllBooks();
-
-        request.setAttribute("allBooks", allBooks);
-        request.setAttribute("user", user);
-        request.setAttribute("patron", loggedInPatron);
-        RequestDispatcher dispatcher = null;
-        if(user == "librarian") {
-        	dispatcher = request.getRequestDispatcher("book-list-librarian.jsp");
-        }
-        else { 
-        	
-        	dispatcher = request.getRequestDispatcher("book-list-patron.jsp"); 
-        }
-
-        dispatcher.forward(request, response);
-		
-	}
+//	private void listBooks(HttpServletRequest request, HttpServletResponse response, String user)
+//			throws ServletException, IOException {
+//		
+//		 List<Book> allBooks = bookDao.getAllBooks();
+//
+//        request.setAttribute("allBooks", allBooks);
+//        request.setAttribute("user", user);
+//        request.setAttribute("patron", loggedInPatron);
+//        RequestDispatcher dispatcher = null;
+//        if(user == "librarian") {
+//        	dispatcher = request.getRequestDispatcher("book-list-librarian.jsp");
+//        }
+//        else { 
+//        	
+//        	dispatcher = request.getRequestDispatcher("book-list-patron.jsp"); 
+//        }
+//
+//        dispatcher.forward(request, response);
+//		
+//	}
 	
 	private void checkoutBook(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
 		// get the book isbn
 		String isbn = request.getParameter("isbn").trim();
-		// get the patron id
-		//int id = Integer.parseInt(request.getParameter("id"));
 		
 		// create new book checkout record for patron and book
 		patronDao.checkoutBook(loggedInPatron.getId(), isbn);
