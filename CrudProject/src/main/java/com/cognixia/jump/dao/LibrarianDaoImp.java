@@ -28,6 +28,7 @@ public class LibrarianDaoImp implements LibrarianDao, BookDao {
 	private static String UPDATE_PASSWORD = "update librarian set password = ?";
 	private static String GET_LIBRARIAN = "SELECT * FROM librarian WHERE username = ? AND password = ?";
     private static String SELECT_ALL_PATRONS = "select * from patron";
+    private static String UPDATE_LIBRARIAN = "update librarian set username = ?, password = ? where librarian_id = ?";
 	
 	@Override
 	public List<Librarian> getAllLibrarians() {
@@ -296,6 +297,23 @@ public class LibrarianDaoImp implements LibrarianDao, BookDao {
 		
 		return allPatrons;
 	}
-	
-	
+
+    @Override
+    public boolean updateLibrarian(Librarian librarian) {
+        try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_LIBRARIAN)) {
+            pstmt.setString(1, librarian.getUsername());
+            pstmt.setString(2, librarian.getPassword());
+            pstmt.setInt(3, librarian.getlibrarian_Id());
+
+            if (pstmt.executeUpdate() > 0) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
 }

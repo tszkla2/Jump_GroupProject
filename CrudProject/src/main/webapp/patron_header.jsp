@@ -56,6 +56,12 @@
 							aria-current="page" 
 						   href="<%= request.getContextPath() %>/returnbook">Return Book</a> 
 					</c:if>
+
+						  <a class="nav-link" 
+							aria-current="page"
+							pos 
+						   href="<%= request.getContextPath() %>/goToPatronForm">Update Account</a>
+						
 						   <a class="nav-link" 
 							aria-current="page"
 							pos 

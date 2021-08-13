@@ -32,7 +32,7 @@ public class PatronDaoImp implements PatronDao{
 	private static String UNRENT = "UPDATE book SET rented = 0 WHERE isbn = ?";
 	private static String DUE_DATE = "SELECT due_date FROM book_checkout WHERE patron_id = ? AND isbn = ?";
 	private static String UPDATE = "UPDATE patron SET first_name = ?, last_name = ?, username = ?, password = ? WHERE patron_id = ?";
-	
+
 	@Override
 	public List<Patron> getAllPatrons(){
 		
@@ -309,6 +309,7 @@ public class PatronDaoImp implements PatronDao{
 			pstmt.setString(2, patron.getLast_name());
 			pstmt.setString(3, patron.getUsername());
 			pstmt.setString(4, patron.getPassword());
+			pstmt.setInt(5, patron.getId());
 			
 			if(pstmt.executeUpdate() > 0) {
 				return true;

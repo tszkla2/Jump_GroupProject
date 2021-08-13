@@ -128,6 +128,18 @@ public class BookServlet extends HttpServlet {
             case "/managePatrons":
                 managePatrons(request, response);
                 break;
+            case "/goToLibrarianForm":
+                goToLibrarianForm(request,response);
+                break;
+            case "/updateLibrarianAccount":
+                updateLibrarianAccount(request,response);
+                break;
+            case "/goToPatronForm":
+                goToPatronForm(request, response);
+                break;
+            case "/updatePatronAccount":
+                updatePatronAccount(request,response);
+                break;
 
             default:
                 response.sendRedirect("/");
@@ -399,5 +411,55 @@ public class BookServlet extends HttpServlet {
         dispatcher.forward(request, response);
 
     }
+
+    private void goToLibrarianForm(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+
+        request.setAttribute("librarian", loggedInLibrarian);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("librarian-update-form.jsp");
+
+        dispatcher.forward(request, response);
+    }
+
+   private void updateLibrarianAccount(HttpServletRequest request, HttpServletResponse response) 
+        throws ServletException, IOException {
+
+            int id = Integer.parseInt(request.getParameter("id"));
+            String username = request.getParameter("username").trim();
+            String password = request.getParameter("password").trim();
+
+            Librarian librarian = new Librarian(id, username, password);
+
+            librarianDao.updateLibrarian(librarian);
+
+            response.sendRedirect("listLibrarian");
+
+        }
+
+        private void goToPatronForm(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    
+            request.setAttribute("patron", loggedInPatron);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("patron-update-form.jsp");
+    
+            dispatcher.forward(request, response);
+        }
+    
+       private void updatePatronAccount(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+    
+                int id = Integer.parseInt(request.getParameter("id"));
+                String username = request.getParameter("username").trim();
+                String password = request.getParameter("password").trim();
+                String fName = request.getParameter("firstName").trim();
+                String lName = request.getParameter("lastName").trim();
+    
+                Patron patron = new Patron(id, fName, lName, username, password);
+    
+                patronDao.updatePatron(patron);
+    
+                response.sendRedirect("listPatron");
+    
+            }
 
 }

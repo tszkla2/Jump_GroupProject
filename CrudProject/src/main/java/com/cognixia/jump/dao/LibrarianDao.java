@@ -17,4 +17,6 @@ public interface LibrarianDao {
 
 	public List<Patron> getAllPatrons();
 
+    public boolean updateLibrarian(Librarian librarian);
+
 }

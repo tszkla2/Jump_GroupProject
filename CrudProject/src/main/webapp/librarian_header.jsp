@@ -55,7 +55,12 @@
 						<a class="nav-link" 
 							aria-current="page"
 							pos 
-						   href="<%= request.getContextPath() %>/managePatrons">Manage Patrons</a>				    					   
+						   href="<%= request.getContextPath() %>/managePatrons">Manage Patrons</a>		
+
+						<a class="nav-link" 
+							aria-current="page"
+							pos 
+						   href="<%= request.getContextPath() %>/goToLibrarianForm">Update Account</a>		    					   
 						   
 						<a class="nav-link" 
 							aria-current="page"
