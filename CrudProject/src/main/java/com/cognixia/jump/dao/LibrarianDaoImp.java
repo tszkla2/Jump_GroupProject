@@ -10,6 +10,7 @@ import java.util.List;
 import com.cognixia.jump.connection.ConnectionManager;
 import com.cognixia.jump.model.Librarian;
 import com.cognixia.jump.model.Book;
+import com.cognixia.jump.model.Patron;
 
 
 public class LibrarianDaoImp implements LibrarianDao, BookDao {
@@ -26,6 +27,7 @@ public class LibrarianDaoImp implements LibrarianDao, BookDao {
 	private static String UPDATE_USERNAME = "update librarian set username = ?";
 	private static String UPDATE_PASSWORD = "update librarian set password = ?";
 	private static String GET_LIBRARIAN = "SELECT * FROM librarian WHERE username = ? AND password = ?";
+    private static String SELECT_ALL_PATRONS = "select * from patron";
 	
 	@Override
 	public List<Librarian> getAllLibrarians() {
@@ -265,6 +267,33 @@ public class LibrarianDaoImp implements LibrarianDao, BookDao {
 		
 		return librarian;
 		
+	}
+
+    @Override
+	public List<Patron> getAllPatrons() {
+		
+		List<Patron> allPatrons = new ArrayList<Patron>();
+		
+		try(PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_PATRONS);
+				ResultSet rs = pstmt.executeQuery() ) {
+			
+			while(rs.next()) {
+				
+				int patron_id = rs.getInt("patron_id");
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+				String username = rs.getString("username");
+				String password = rs.getString("password");
+				
+				allPatrons.add(new Patron(patron_id, firstName, lastName, username, password));
+				
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return allPatrons;
 	}
 	
 	

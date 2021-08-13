@@ -19,7 +19,7 @@ public class BookDaoImp implements BookDao {
     private static String SELECT_BOOK_BY_ISBN = "select * from book where isbn = ?";
     private static String INSERT_BOOK = "insert into book(isbn,title, descr, rented, added_to_library ) values(?, ?, ?, ?, ?)";
     private static String DELETE_BOOK = "delete from book where isbn = ?";
-    private static String UPDATE_BOOK = "update book set title = ?, rented = ?, descr = ? where isbn = ?";
+    private static String UPDATE_BOOK = "update book set title = ?, descr = ? where isbn = ?";
     private static String UPDATE_BOOK_AVAILABILITY = "update book set rented = ? where isbn = ?";
 
     @Override
@@ -126,11 +126,8 @@ public class BookDaoImp implements BookDao {
         try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_BOOK)) {
 
             pstmt.setString(1, book.getTitle());
-            pstmt.setBoolean(2, book.isRented());
-            pstmt.setString(3, book.getDescription());
-            pstmt.setString(4, book.getIsbn());
-
-            System.out.println("book");
+            pstmt.setString(2, book.getDescription());
+            pstmt.setString(3, book.getIsbn());
 
             // at least one row updated
             if (pstmt.executeUpdate() > 0) {

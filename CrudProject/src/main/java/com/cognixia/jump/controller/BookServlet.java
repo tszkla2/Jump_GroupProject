@@ -106,6 +106,9 @@ public class BookServlet extends HttpServlet {
                 listBooks(request, response,"librarian");
                 break;
             
+            case "/manageCatalog":
+                listBooks(request, response);
+            
             case "/listPatron":
                 listBooks(request, response, "patron");
                 break;
@@ -121,8 +124,12 @@ public class BookServlet extends HttpServlet {
             case "/logout":
             	response.sendRedirect("/CrudProject");
             	break;
-            default:
 
+            case "/managePatrons":
+                managePatrons(request, response);
+                break;
+
+            default:
                 response.sendRedirect("/");
                 break;
         }
@@ -141,6 +148,19 @@ public class BookServlet extends HttpServlet {
         RequestDispatcher dispatcher = null;
         if(user == "librarian") {dispatcher = request.getRequestDispatcher("book-list-librarian.jsp");}
         else { dispatcher = request.getRequestDispatcher("book-list-patron.jsp"); }
+
+        dispatcher.forward(request, response);
+    }
+
+    private void listBooks(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+
+        List<Book> allBooks = bookDao.getAllBooks();
+
+        request.setAttribute("allBooks", allBooks);
+        request.setAttribute("librarian", loggedInLibrarian);
+        RequestDispatcher dispatcher = null;
+        dispatcher = request.getRequestDispatcher("book-list-manage.jsp");
 
         dispatcher.forward(request, response);
     }
@@ -188,17 +208,16 @@ public class BookServlet extends HttpServlet {
         // grab info to do update for product submitted by form
         String isbn = request.getParameter("isbn").trim();
         String title = request.getParameter("title").trim();
-        boolean rented = Boolean.parseBoolean(request.getParameter("rented").trim());
         String description = request.getParameter("description").trim();
 
         // create the product object
-        Book book = new Book(isbn, title, description, rented, new Date());
+        Book book = new Book(isbn, title, description, false, new Date());
 
         // pass object to update from the dao
         bookDao.updateBook(book);
 
         // redirect to our list products page once we finish updating info on product
-        response.sendRedirect("listLibrarian");
+        response.sendRedirect("manageCatalog");
     }
 
     private void goToNewBookForm(HttpServletRequest request, HttpServletResponse response) 
@@ -214,11 +233,10 @@ public class BookServlet extends HttpServlet {
 		
 		// grab values to create product from our form
 		String title = request.getParameter("title").trim();
-        boolean rented = Boolean.parseBoolean(request.getParameter("rented").trim());
         String description = request.getParameter("description").trim();
 		
         // create object for product
-		Book book = new Book(Utility.randomIsbn(), title, description, rented, new Date());
+		Book book = new Book(Utility.randomIsbn(), title, description, false, new Date());
 		
 		// call dao to add product to our database
 		bookDao.addBook(book);
@@ -366,5 +384,19 @@ public class BookServlet extends HttpServlet {
 		response.sendRedirect("/CrudProject/returnbook");
 		
 	}
+
+    private void managePatrons(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+
+        List<Patron> allPatrons = librarianDao.getAllPatrons();
+
+        request.setAttribute("allPatrons", allPatrons);
+        request.setAttribute("librarian", loggedInLibrarian);
+        RequestDispatcher dispatcher = null;
+        dispatcher = request.getRequestDispatcher("manage-patrons.jsp");
+
+        dispatcher.forward(request, response);
+
+    }
 
 }
