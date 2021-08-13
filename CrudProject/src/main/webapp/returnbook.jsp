@@ -68,6 +68,9 @@
 				<th>#</th>
 				<th>Title</th>
 				<th>Description</th>
+				<th>Checked Out</th>
+				<th>Due Date</th>
+				<th>Returned</th>
 			</tr>
 		</thead>
 		
