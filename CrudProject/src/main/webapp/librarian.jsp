@@ -1,9 +1,8 @@
-
 <%@ include file="librarian_header.jsp" %>
 
 <div class="container">
 	
-<h1>Welcome {librarian.first_name}</h1>
+<h1>Welcome ${librarian.username}</h1>
 
 </div>
 

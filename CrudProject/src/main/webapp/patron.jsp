@@ -3,7 +3,7 @@
 
 <div class="container">
 	
-<b>Welcome ${patron.first_name} ( will be patron.first_name )</b>
+<b>Welcome ${patron.first_name}</b>
 
 </div>
 

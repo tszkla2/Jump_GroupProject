@@ -48,10 +48,10 @@
 							   aria-current="page" 
 							   href="<%= request.getContextPath() %>/listPatron">View Catalogue</a> 
 					
-						<a class="nav-link" 
+<%-- 						<a class="nav-link" 
 						   aria-current="page" 
 						   href="<%= request.getContextPath() %>/checkoutbook">Checkout Book</a> 
-						
+	--%>					
 						<a class="nav-link" 
 							aria-current="page" 
 						   href="<%= request.getContextPath() %>/returnbook">Return Book</a> 
@@ -112,4 +112,3 @@
 			</div>
 		</nav>
  --%>
-

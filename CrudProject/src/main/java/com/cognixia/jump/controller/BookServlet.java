@@ -21,6 +21,10 @@ import com.cognixia.jump.model.BookDate;
 import com.cognixia.jump.utility.Utility;
 import com.cognixia.jump.model.Patron;
 import com.cognixia.jump.dao.PatronDaoImp;
+import com.cognixia.jump.model.Librarian;
+import com.cognixia.jump.dao.LibrarianDao;
+import com.cognixia.jump.dao.LibrarianDaoImp;
+
 
 @WebServlet("/")
 public class BookServlet extends HttpServlet {
@@ -29,10 +33,13 @@ public class BookServlet extends HttpServlet {
     private BookDaoImp bookDao;
     private PatronDaoImp patronDao;
     private Patron loggedInPatron;
-
+	private Librarian loggedInLibrarian;
+	private LibrarianDao librarianDao;
+	
     public void init() {
         bookDao = new BookDaoImp();
         patronDao = new PatronDaoImp();
+		librarianDao = new LibrarianDaoImp();
     }
 
     public void destroy() {
@@ -130,6 +137,7 @@ public class BookServlet extends HttpServlet {
         request.setAttribute("allBooks", allBooks);
         request.setAttribute("user", user);
         request.setAttribute("patron", loggedInPatron);
+        request.setAttribute("librarian", loggedInLibrarian);
         RequestDispatcher dispatcher = null;
         if(user == "librarian") {dispatcher = request.getRequestDispatcher("book-list-librarian.jsp");}
         else { dispatcher = request.getRequestDispatcher("book-list-patron.jsp"); }
@@ -224,12 +232,10 @@ public class BookServlet extends HttpServlet {
 			throws ServletException, IOException {
 		
 		String temp = request.getParameter("choice");
+		String userType = new String();
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		String userType = new String();
-		
 		if(temp.equals("0")) {
-			
 			userType = "patron";
 			Patron patron = patronDao.getPatron(username, password);
 			// if patron is found in db
@@ -246,6 +252,18 @@ public class BookServlet extends HttpServlet {
 		}
 		else {
 			userType = "librarian";
+			Librarian librarian = librarianDao.getLibrarian(username, password);
+			// if patron is found in db
+			if(librarian != null) {
+				loggedInLibrarian = librarian; 
+				//HttpSession session = request.getSession();
+				request.setAttribute("librarian", librarian);
+				
+			}
+			else { // invalid username/password, routed back to login
+				RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+				dispatcher.forward(request, response);
+			}
 
 		}
 		
@@ -295,13 +313,16 @@ public class BookServlet extends HttpServlet {
 
     private void rentBook(HttpServletRequest request, HttpServletResponse response)  throws ServletException, IOException {
     	// get the book isbn
-		String isbn = request.getParameter("isbn").trim();
-		
-		// create new book checkout record for patron and book
-		patronDao.checkoutBook(loggedInPatron.getId(), isbn);
-		
-		response.sendRedirect("/CrudProject/listPatron");
-    	
+    			String isbn = request.getParameter("isbn").trim();
+    			
+    			// create new book checkout record for patron and book
+    			patronDao.checkoutBook(loggedInPatron.getId(), isbn);
+    			
+    			response.sendRedirect("/CrudProject/listPatron");
+    	    	
+//    	    	RequestDispatcher dispatcher = request.getRequestDispatcher("/rent");
+    	//
+//    	        dispatcher.forward(request, response);
     }
     
     private void listRentedBooks(HttpServletRequest request, HttpServletResponse response)

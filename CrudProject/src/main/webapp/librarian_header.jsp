@@ -41,11 +41,25 @@
 					
 					
 						<a class="nav-link" 
-							   aria-current="page" 
-							   href="<%= request.getContextPath() %>/listLibrarian">Manage Catalog</a> 
+							aria-current="page"
+							href="<%= request.getContextPath() %>/listLibrarian">List Books</a> 
 					
 					 	<a class="nav-link" 
-						   href="<%= request.getContextPath() %>/new">Add</a> 
+					 	 	aria-current="page" 
+						    href="<%= request.getContextPath() %>/new">Add Book</a> 
+						    
+					 	<a class="nav-link" 
+					 	 	aria-current="page" 
+						    href="<%= request.getContextPath() %>/delete">Delete Book</a> 						    
+						   
+					 	<a class="nav-link" 
+					 	 	aria-current="page" 
+						    href="<%= request.getContextPath() %>/edit">Update Book</a> 						   
+						   
+						<a class="nav-link" 
+							aria-current="page"
+							pos 
+						   href="<%= request.getContextPath() %>/logout">Logout</a> 
 						
 					</div>
 				</div>
@@ -55,9 +69,4 @@
 				
 				
 			</div>
-
 		</nav>
-
-		
-
-
