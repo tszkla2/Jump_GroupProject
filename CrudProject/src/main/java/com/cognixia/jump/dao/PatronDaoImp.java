@@ -17,16 +17,19 @@ import com.cognixia.jump.model.Patron;
 public class PatronDaoImp implements PatronDao{
 
 	public static final Connection conn = ConnectionManager.getConnection();
-	
+	//, book_checkout.checkedout, book_checkout.due_date, book_checkout.returned
 	private static String GET_ALL_PATRONS = "SELECT * FROM patron";
 	private static String GET_PATRON_ID = "SELECT patron_id FROM patron WHERE username = ?";
-	private static String SELECT_ALL_PATRON_BOOKS = "SELECT book.isbn, book.title, book.desc, book.rented, book.added_to_library from book "
-													+ "INNER JOIN book_checkout ON book.isbn=book_checkout.isbn WHERE book_checkout.patron_id = ? ";
+	private static String SELECT_BOOK_DATES = "SELECT checkedout, due_date, returned FROM book_checkout WHERE patron_id = ? AND isbn = ?";
+	private static String SELECT_ALL_PATRON_BOOKS = "SELECT  book.isbn, book.title, book.descr, book.rented, book.added_to_library from book "
+													+ "INNER JOIN book_checkout ON book.isbn=book_checkout.isbn WHERE book_checkout.patron_id = ?";
 	private static String ADD_PATRON = "INSERT INTO patron (first_name, last_name, username, password) VALUES (?, ?, ?, ?)";
 	private static String GET_PATRON = "SELECT * FROM patron WHERE username = ? AND password = ?";
 	private static String GET_PATRON_BY_ID = "SELECT * FROM patron WHERE patron_id = ?";
 	private static String CHECKOUT = "INSERT INTO book_checkout (patron_id, isbn, checkedout, due_date) VALUES (?, ?, ?, ?)";
+	private static String RENT = "UPDATE book SET rented = 1 WHERE isbn = ?";
 	private static String RETURN = "UPDATE book_checkout SET returned = ? WHERE patron_id = ? AND isbn = ?";
+	private static String UNRENT = "UPDATE book SET rented = 0 WHERE isbn = ?";
 	private static String DUE_DATE = "SELECT due_date FROM book_checkout WHERE patron_id = ? AND isbn = ?";
 	private static String UPDATE = "UPDATE patron SET first_name = ?, last_name = ?, username = ?, password = ? WHERE patron_id = ?";
 	
@@ -82,8 +85,40 @@ public class PatronDaoImp implements PatronDao{
 		
 	}
 	
+	public List<String> getBookDates(int id, String isbn){
+		
+		List<String> bookDates = new ArrayList<String>();
+		
+		try( PreparedStatement pstmt = conn.prepareStatement(SELECT_BOOK_DATES)) {
+			
+			pstmt.setInt(1, id);
+			pstmt.setString(2, isbn);
+			
+			ResultSet rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				String checkedout = rs.getDate("checkedout").toString();
+				String due_date = rs.getDate("due_date").toString();
+				String returnDateString = "";
+				java.sql.Date returned = rs.getDate("returned");
+				if(returned != null) {
+					returnDateString = returned.toString();
+				}
+				
+				bookDates.add(checkedout);
+				bookDates.add(due_date);
+				bookDates.add(returnDateString);
+			}
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return bookDates;
+	}
+	
 	@Override
-	public List<com.cognixia.jump.model.Book> getPatronBooks(int id) {
+	public List<Book> getPatronBooks(int id) {
 		
 		List<Book> allPatronBooks = new ArrayList<Book>();
 		
@@ -201,13 +236,18 @@ public class PatronDaoImp implements PatronDao{
 		
 		long WEEK = 7 * 24 * 60 * 60 * 1000;
 		
-		try(PreparedStatement pstmt = conn.prepareStatement(CHECKOUT)){
+		try(PreparedStatement pstmt = conn.prepareStatement(CHECKOUT);
+				PreparedStatement rentPstmt = conn.prepareStatement(RENT)){
 			
 			
 			pstmt.setInt(1, id);
 			pstmt.setString(2, isbn);
 			pstmt.setDate(3, new java.sql.Date(System.currentTimeMillis()));
 			pstmt.setDate(4, new java.sql.Date(System.currentTimeMillis() + WEEK));
+			
+			rentPstmt.setString(1, isbn);
+			rentPstmt.executeUpdate();
+			
 			if(pstmt.executeUpdate() > 0) {
 				return true;
 			}
@@ -226,7 +266,8 @@ public class PatronDaoImp implements PatronDao{
 		 
 		
 		try(PreparedStatement pstmt = conn.prepareStatement(RETURN);
-				PreparedStatement duePstmt = conn.prepareStatement(DUE_DATE)) {
+				PreparedStatement duePstmt = conn.prepareStatement(DUE_DATE);
+				PreparedStatement unrentPstmt = conn.prepareStatement(UNRENT)) {
 			
 			// Calculates the return date
 			java.sql.Date returnDate = new java.sql.Date(System.currentTimeMillis());
@@ -237,6 +278,9 @@ public class PatronDaoImp implements PatronDao{
 			
 			duePstmt.setInt(1, id);
 			duePstmt.setString(2, isbn);
+			
+			unrentPstmt.setString(1, isbn);
+			unrentPstmt.executeUpdate();
 			
 			// retrieves the due date
 			ResultSet rs = duePstmt.executeQuery();

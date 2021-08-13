@@ -10,6 +10,8 @@ public interface PatronDao {
 	public List<Patron> getAllPatrons();
 	
 	public List<Book> getPatronBooks(int id);
+	
+	public List<String> getBookDates(int id, String isbn);
 
 	public boolean addPatron(Patron patron);
 	

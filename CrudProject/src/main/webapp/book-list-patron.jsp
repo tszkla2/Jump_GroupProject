@@ -21,7 +21,7 @@
 		
 			<c:forEach var="book" items="${ allBooks }">
 				
-				<%-- <c:if test="${ book.rented }"> --%>
+				<c:if test="${ book.rented == false}">
 				
 				<tr>
 					<td>
@@ -40,17 +40,21 @@
 						<c:out value="${ book.rented }" />
 					</td>
 					<td>
-						<a href="checkoutbook?isbn=<c:out value='${ book.isbn }' />">
+						<a href="rent?isbn=<c:out value='${ book.isbn }' />">
 							<button class="btn btn-primary">Rent</button>
 						</a>
 					</td>
 				</tr>
+				
+				</c:if>
 			
 			</c:forEach>
 		
 		</tbody>
 	
 	</table>
+	
+	
 	
 
 </div>

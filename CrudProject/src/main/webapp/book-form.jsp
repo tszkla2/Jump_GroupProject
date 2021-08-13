@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 <%@ include file="librarian_header.jsp" %>
 
 <div class="container">
@@ -43,11 +39,7 @@
 	  
 	  <div class="form-group">
 	  
-<<<<<<< Updated upstream
 	    <label for="rented">Availability</label>
-=======
-	    <label for="rented">Rented</label>
->>>>>>> Stashed changes
 	    <input type="boolean" class="form-control" id="rented" name="rented"
 	    	value="<c:out value='${ book.rented }' />" required>
 	    
@@ -60,7 +52,6 @@
 	    	value="<c:out value='${ book.description }' />" required>
 	    
 	  </div>
-<<<<<<< Updated upstream
 
 	  <%-- <div class="form-group">
 	  
@@ -71,9 +62,6 @@
 	  </div> --%>
 
 	  
-=======
- 
->>>>>>> Stashed changes
 	  <button type="submit" 
 	  		  class="btn btn-primary"
 	  		  style="margin:10px">Submit</button>

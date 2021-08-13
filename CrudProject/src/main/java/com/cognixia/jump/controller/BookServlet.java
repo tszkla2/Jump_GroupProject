@@ -2,6 +2,7 @@ package com.cognixia.jump.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,30 +12,25 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.cognixia.jump.connection.ConnectionManager;
 import com.cognixia.jump.dao.BookDaoImp;
 import com.cognixia.jump.model.Book;
+import com.cognixia.jump.model.BookDate;
 import com.cognixia.jump.utility.Utility;
-<<<<<<< Updated upstream
-=======
 import com.cognixia.jump.model.Patron;
 import com.cognixia.jump.dao.PatronDaoImp;
 import com.cognixia.jump.model.Librarian;
 import com.cognixia.jump.dao.LibrarianDao;
 import com.cognixia.jump.dao.LibrarianDaoImp;
->>>>>>> Stashed changes
+
 
 @WebServlet("/")
 public class BookServlet extends HttpServlet {
     public static final long serialVersionUID = 1L;
 
     private BookDaoImp bookDao;
-<<<<<<< Updated upstream
-
-    public void init() {
-        bookDao = new BookDaoImp();
-=======
     private PatronDaoImp patronDao;
     private Patron loggedInPatron;
 	private Librarian loggedInLibrarian;
@@ -44,7 +40,6 @@ public class BookServlet extends HttpServlet {
         bookDao = new BookDaoImp();
         patronDao = new PatronDaoImp();
 		librarianDao = new LibrarianDaoImp();
->>>>>>> Stashed changes
     }
 
     public void destroy() {
@@ -117,6 +112,15 @@ public class BookServlet extends HttpServlet {
             case "/rent":
                 rentBook(request, response);
                 break;
+            case "/returnbook":
+            	listRentedBooks(request, response);
+            	break;
+            case "/return":
+            	returnBook(request, response);
+            	break;
+            case "/logout":
+            	response.sendRedirect("/CrudProject");
+            	break;
             default:
 
                 response.sendRedirect("/");
@@ -132,11 +136,8 @@ public class BookServlet extends HttpServlet {
 
         request.setAttribute("allBooks", allBooks);
         request.setAttribute("user", user);
-<<<<<<< Updated upstream
-=======
         request.setAttribute("patron", loggedInPatron);
         request.setAttribute("librarian", loggedInLibrarian);
->>>>>>> Stashed changes
         RequestDispatcher dispatcher = null;
         if(user == "librarian") {dispatcher = request.getRequestDispatcher("book-list-librarian.jsp");}
         else { dispatcher = request.getRequestDispatcher("book-list-patron.jsp"); }
@@ -232,8 +233,22 @@ public class BookServlet extends HttpServlet {
 		
 		String temp = request.getParameter("choice");
 		String userType = new String();
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
 		if(temp.equals("0")) {
 			userType = "patron";
+			Patron patron = patronDao.getPatron(username, password);
+			// if patron is found in db
+			if(patron != null) {
+				loggedInPatron = patron; 
+				//HttpSession session = request.getSession();
+				request.setAttribute("patron", patron);
+				
+			}
+			else { // invalid username/password, routed back to login
+				RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+				dispatcher.forward(request, response);
+			}
 		}
 		else {
 			userType = "librarian";
@@ -297,9 +312,59 @@ public class BookServlet extends HttpServlet {
 	}
 
     private void rentBook(HttpServletRequest request, HttpServletResponse response)  throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("rent.jsp");
+    	// get the book isbn
+    			String isbn = request.getParameter("isbn").trim();
+    			
+    			// create new book checkout record for patron and book
+    			patronDao.checkoutBook(loggedInPatron.getId(), isbn);
+    			
+    			response.sendRedirect("/CrudProject/listPatron");
+    	    	
+//    	    	RequestDispatcher dispatcher = request.getRequestDispatcher("/rent");
+    	//
+//    	        dispatcher.forward(request, response);
+    }
+    
+    private void listRentedBooks(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		List<Book> patronBooks = patronDao.getPatronBooks(loggedInPatron.getId());
+		List<BookDate> bookDate = new ArrayList<BookDate>();
+		
+		for(Book book : patronBooks) {
+			
+			List<String> dates = patronDao.getBookDates(loggedInPatron.getId(), book.getIsbn());
+			String checkedout = dates.get(0);
+			String due_date = dates.get(1);
+			String returned = dates.get(2);
+			
+			BookDate book_date_obj = new BookDate(book,checkedout, due_date, returned);
+			bookDate.add(book_date_obj);
+		}
+		
+		request.setAttribute("bookDate", bookDate);
+		request.setAttribute("patron", loggedInPatron);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("returnbook.jsp");
 
         dispatcher.forward(request, response);
-    }
+		
+	}
+    
+    private void returnBook(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		// get the book isbn
+		String isbn = request.getParameter("isbn").trim();
+		// get the patron id
+		
+		request.setAttribute("patron", loggedInPatron);
+		
+		// return book/update book_checkout table with return date
+		patronDao.returnBook(loggedInPatron.getId(), isbn);
+		
+		// redirect to returns page
+		response.sendRedirect("/CrudProject/returnbook");
+		
+	}
 
 }
