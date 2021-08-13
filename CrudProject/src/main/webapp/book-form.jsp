@@ -1,4 +1,3 @@
-
 <%@ include file="librarian_header.jsp" %>
 
 <div class="container">
@@ -35,14 +34,6 @@
 	    <label for="title">Title</label>
 	    <input type="text" class="form-control" id="title" name="title" 
 	    	value="<c:out value='${ book.title }' />" required>
-	    
-	  </div>
-	  
-	  <div class="form-group">
-	  
-	    <label for="rented">Availability</label>
-	    <input type="boolean" class="form-control" id="rented" name="rented"
-	    	value="<c:out value='${ book.rented }' />" required>
 	    
 	  </div>
 	  

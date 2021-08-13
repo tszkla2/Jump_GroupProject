@@ -1,4 +1,4 @@
-<%@ include file="patron_header.jsp" %>
+<%@ include file="librarian_header.jsp" %>
 
 <div class="container">
 	
@@ -12,16 +12,15 @@
 				<th>#</th>
 				<th>Title</th>
 				<th>Description</th>
-				<th>Rented</th>
-				<th>Actions</th>
+				<th>Manage</th>
+                
 			</tr>
 		</thead>
 		
 		<tbody>
 		
 			<c:forEach var="book" items="${ allBooks }">
-				
-				<c:if test="${ book.rented == false}">
+                <c:if test="${ book.rented == false}">
 				
 				<tr>
 					<td>
@@ -37,24 +36,27 @@
 					</td>
 					
 					<td>
-						<c:out value="${ book.rented }" />
-					</td>
-					<td>
-						<a href="rent?isbn=<c:out value='${ book.isbn }' />">
-							<button class="btn btn-primary">Rent</button>
+						
+						<a href="edit?isbn=<c:out value='${ book.isbn }' />">
+							<button class="btn btn-primary">Edit</button>
 						</a>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="delete?isbn=<c:out value='${ book.isbn }' />">
+						
+							<button class="btn btn-danger">Delete</button>
+							
+						</a>
+						
 					</td>
+
 				</tr>
-				
-				</c:if>
+                </c:if>
 			
 			</c:forEach>
 		
 		</tbody>
 	
 	</table>
-	
-	
 	
 
 </div>
