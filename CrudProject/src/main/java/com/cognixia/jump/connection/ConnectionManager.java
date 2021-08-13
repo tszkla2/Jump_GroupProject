@@ -10,7 +10,13 @@ public class ConnectionManager {
 	// Mac/Linux: jdbc:mysql://localhost:3306/crud_db?serverTimezone=EST5EDT
 	private static final String URL = "jdbc:mysql://localhost:3306/library";
 	private static final String USERNAME = "root";
+<<<<<<< Updated upstream
 	private static final String PASSWORD = "root"; // Windows: root | Mac/Linux: Root@123
+=======
+
+	private static final String PASSWORD = "root"; // Windows: root | Mac/Linux: Root@123
+
+>>>>>>> Stashed changes
 	
 	private static Connection connection = null;
 	

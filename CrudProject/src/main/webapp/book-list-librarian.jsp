@@ -13,7 +13,10 @@
 				<th>Title</th>
 				<th>Description</th>
 				<th>Rented</th>
+<<<<<<< Updated upstream
 			<%--<th>Actions</th> --%>				
+=======
+>>>>>>> Stashed changes
 			</tr>
 		</thead>
 		
@@ -38,6 +41,7 @@
 						<c:out value="${ book.rented }" />
 					</td>
 					
+<<<<<<< Updated upstream
 <%--					<td>
 						
 						<a href="edit?isbn=<c:out value='${ book.isbn }' />">
@@ -52,6 +56,10 @@
 						
 					</td>
 --%>
+=======
+
+
+>>>>>>> Stashed changes
 				</tr>
 			
 			</c:forEach>

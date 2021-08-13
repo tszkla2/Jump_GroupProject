@@ -16,15 +16,35 @@ import com.cognixia.jump.connection.ConnectionManager;
 import com.cognixia.jump.dao.BookDaoImp;
 import com.cognixia.jump.model.Book;
 import com.cognixia.jump.utility.Utility;
+<<<<<<< Updated upstream
+=======
+import com.cognixia.jump.model.Patron;
+import com.cognixia.jump.dao.PatronDaoImp;
+import com.cognixia.jump.model.Librarian;
+import com.cognixia.jump.dao.LibrarianDao;
+import com.cognixia.jump.dao.LibrarianDaoImp;
+>>>>>>> Stashed changes
 
 @WebServlet("/")
 public class BookServlet extends HttpServlet {
     public static final long serialVersionUID = 1L;
 
     private BookDaoImp bookDao;
+<<<<<<< Updated upstream
 
     public void init() {
         bookDao = new BookDaoImp();
+=======
+    private PatronDaoImp patronDao;
+    private Patron loggedInPatron;
+	private Librarian loggedInLibrarian;
+	private LibrarianDao librarianDao;
+	
+    public void init() {
+        bookDao = new BookDaoImp();
+        patronDao = new PatronDaoImp();
+		librarianDao = new LibrarianDaoImp();
+>>>>>>> Stashed changes
     }
 
     public void destroy() {
@@ -112,6 +132,11 @@ public class BookServlet extends HttpServlet {
 
         request.setAttribute("allBooks", allBooks);
         request.setAttribute("user", user);
+<<<<<<< Updated upstream
+=======
+        request.setAttribute("patron", loggedInPatron);
+        request.setAttribute("librarian", loggedInLibrarian);
+>>>>>>> Stashed changes
         RequestDispatcher dispatcher = null;
         if(user == "librarian") {dispatcher = request.getRequestDispatcher("book-list-librarian.jsp");}
         else { dispatcher = request.getRequestDispatcher("book-list-patron.jsp"); }
@@ -212,6 +237,18 @@ public class BookServlet extends HttpServlet {
 		}
 		else {
 			userType = "librarian";
+			Librarian librarian = librarianDao.getLibrarian(username, password);
+			// if patron is found in db
+			if(librarian != null) {
+				loggedInLibrarian = librarian; 
+				//HttpSession session = request.getSession();
+				request.setAttribute("librarian", librarian);
+				
+			}
+			else { // invalid username/password, routed back to login
+				RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+				dispatcher.forward(request, response);
+			}
 
 		}
 		
