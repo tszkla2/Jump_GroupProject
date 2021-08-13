@@ -4,14 +4,13 @@ import java.util.List;
 
 import com.cognixia.jump.model.Book;
 import com.cognixia.jump.model.Patron;
+import com.cognixia.jump.model.BookDate;
 
 public interface PatronDao {
 	
 	public List<Patron> getAllPatrons();
 	
-	public List<Book> getPatronBooks(int id);
-	
-	public List<String> getBookDates(int id, String isbn);
+	public List<BookDate> getPatronBooks(int id);
 
 	public boolean addPatron(Patron patron);
 	

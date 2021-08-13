@@ -328,19 +328,7 @@ public class BookServlet extends HttpServlet {
     private void listRentedBooks(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		List<Book> patronBooks = patronDao.getPatronBooks(loggedInPatron.getId());
-		List<BookDate> bookDate = new ArrayList<BookDate>();
-		
-		for(Book book : patronBooks) {
-			
-			List<String> dates = patronDao.getBookDates(loggedInPatron.getId(), book.getIsbn());
-			String checkedout = dates.get(0);
-			String due_date = dates.get(1);
-			String returned = dates.get(2);
-			
-			BookDate book_date_obj = new BookDate(book,checkedout, due_date, returned);
-			bookDate.add(book_date_obj);
-		}
+		List<BookDate> bookDate = patronDao.getPatronBooks(loggedInPatron.getId());
 		
 		request.setAttribute("bookDate", bookDate);
 		request.setAttribute("patron", loggedInPatron);
